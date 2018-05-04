@@ -81,6 +81,12 @@
 ;; (ac-config-default)
 ;; (add-hook 'js2-mode-hook 'ac-js2-mode)
 
+(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term))
+
+(dolist (package package-list)
+	(unless (package-installed-p package)
+		    (package-install package)))
+
 
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -98,6 +104,9 @@
 
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
+
+(require 'undo-tree)
+(global-undo-tree-mode)
 
 
 (require 'multiple-cursors)
