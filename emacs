@@ -2,7 +2,7 @@
 (setq package-check-signature nil)
 (setq-default tab-width 2)
 
-(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term monokai))
+(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term monokai-theme))
 
 (dolist (package package-list)
 	(unless (package-installed-p package)
