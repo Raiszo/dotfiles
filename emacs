@@ -1,6 +1,14 @@
 (package-initialize)
 (setq package-check-signature nil)
 (setq-default tab-width 2)
+
+(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term monokai))
+
+(dolist (package package-list)
+	(unless (package-installed-p package)
+		    (package-install package)))
+
+
 (custom-set-variables
  ;;custom-set-variables was added by Custom.
  ;;If you edit it by hand, you could mess it up, so be careful.
@@ -81,11 +89,6 @@
 ;; (ac-config-default)
 ;; (add-hook 'js2-mode-hook 'ac-js2-mode)
 
-(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term))
-
-(dolist (package package-list)
-	(unless (package-installed-p package)
-		    (package-install package)))
 
 
 (require 'js2-mode)
