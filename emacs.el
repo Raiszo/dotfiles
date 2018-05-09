@@ -6,11 +6,12 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") )
 
-(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term monokai-theme))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme ))
 
 (dolist (package package-list)
-	(unless (package-installed-p package)
-		    (package-install package)))
+  (unless (package-installed-p package)
+    (package-refresh-contents)
+    (package-install package)))
 
 ;; (defun my-insert-tab-char ()
 ;; 	"Insert a tab char. (ASCII 9, \t)"
@@ -71,7 +72,10 @@
 (require 'ace-window)
 (global-set-key (kbd "M-o") 'ace-window)
 
+(require 'highlight-indent-guides)
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'character)
+
 (global-linum-mode t)
 (show-paren-mode)
 (electric-pair-mode)
