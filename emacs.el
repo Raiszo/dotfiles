@@ -3,14 +3,15 @@
 
 (require 'package)
 ;;Add melpa repository
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") )
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company company-tern ace-window neotree multiple-cursors multi-term monokai-theme))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit))
 
 (dolist (package package-list)
-	(unless (package-installed-p package)
-		    (package-install package)))
+  (unless (package-installed-p package)
+    (package-refresh-contents)
+    (package-install package)))
 
 ;; (defun my-insert-tab-char ()
 ;; 	"Insert a tab char. (ASCII 9, \t)"
@@ -71,8 +72,12 @@
 (require 'ace-window)
 (global-set-key (kbd "M-o") 'ace-window)
 
+(require 'highlight-indent-guides)
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'character)
+
 (global-linum-mode t)
+(setq linum-format "%d ")
 (show-paren-mode)
 (electric-pair-mode)
 (ido-mode t)
@@ -82,6 +87,9 @@
 
 (require 'multi-term)
 
+(require 'powerline)
+(powerline-center-theme)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -89,10 +97,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
 	 (quote
-		("3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default))))
+		("9fe1540491fcf692b8c639a3abacd32b29233bc4cb834a12a0fd1e01cbd0a128" "f41ecd2c34a9347aeec0a187a87f9668fa8efb843b2606b6d5d92a653abe2439" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default")))))
