@@ -1,0 +1,200 @@
+!-------- Xterm Terminal Settings {{{
+!------------------------------------------------------
+! https://wiki.archlinux.org/index.php/Xterm
+! https://lukas.zapletalovi.com/2013/07/hidden-gems-of-xterm.html
+! http://www.futurile.net/2016/06/14/xterm-setup-and-truetype-font-configuration/
+! http://www.futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/
+
+! Allow xterm to report the TERM variable correctly.
+! Do not set the TERM variable from your ~/.bashrc or ~/.bash_profile or similar file.
+! The terminal itself should report the correct TERM to the system so that the proper terminfo file will be used.
+! Two usable terminfo names are xterm and xterm-256color
+XTerm.termName: xterm-256color
+
+! Fonts ====================================================
+! set font and fontsize
+XTerm*faceName: DejaVu Sans Mono
+XTerm*faceSize: 12
+
+! VT Font Menu: Unreadable
+! xterm*faceSize1: 8
+! VT font menu: Tiny
+! xterm*faceSize2: 10
+! VT font menu: Medium
+! xterm*faceSize3: 12
+! VT font menu: Large
+! xterm*faceSize4: 16
+! VT font menu: Huge
+! xterm*faceSize5: 22
+
+
+! Ensure that your locale is set up for UTF-8. If you do not use UTF-8, you may need to force xterm to more strictly follow your locale by setting
+XTerm.vt100.locale: true
+
+! Cursor ====================================================
+! pointer and cursor (blinking and color)
+XTerm*pointerColor: white
+XTerm*pointerColorBackground: black
+XTerm*cursorColor: white
+XTerm*cursorBlink: false
+
+
+!! Selecting Text ========================================================
+! Only select text
+XTerm*highlightSelection: true
+! Remove trailing spaces
+XTerm*trimSelection: true
+
+!! Scrolling ========================================================
+! Use: Shift-Pageup / Shift-Pagedown to scroll or mousewheel
+! Lines of output that you can scroll back over
+XTerm*saveLines: 16384
+
+! Turn the scrollbar on, and put it on the right
+! XTerm.vt100.scrollBar: true
+! XTerm.vt100.scrollbar.width: 8
+! xterm*scrollBar: true
+! xterm*rightScrollBar: true
+
+! Do not scroll when there is new input e.g. tail -f /var/syslog
+XTerm*scrollTtyOutput: false
+
+
+!! Keybinding ========================================================
+! http://blog.rot13.org/2010/03/change-font-size-in-xterm-using-keyboard.html
+! - change fontsize on the fly (ctrl+plus = increase ; ctrl+minus = decrease, ctrl+0 = default)
+! - copy/paste hotkey (ctrl+shift+c = copy ; ctrl+shift+v = paste)
+! - open url (clickable links)
+!   1) double click to highlight the full url
+!   2) Shift + click it to open it
+XTerm.vt100.translations: #override \n\
+  Ctrl <Key> minus: smaller-vt-font() \n\
+  Ctrl <Key> plus: larger-vt-font() \n\
+  Ctrl <Key> 0: set-vt-font(d) \n\
+  Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+  Ctrl Shift <Key>V: insert-selection(CLIPBOARD) \n\
+  Shift <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY) \n\
+  <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0) \n\
+  <Btn2Up>: insert-selection(PRIMARY)
+
+! enable copy/paste hotkey to work (shift+insert = paste ; mouse highlight = copy)
+XTerm*selectToClipboard: true
+! disable fullscreen hotkey alt+enter (hotkey conflicts with weechat, midnight commander ...etc)
+! XTerm*fullscreen: never
+! enable alt key to work
+XTerm*metaSendsEscape: true
+! Fix the backspace key (for Emacs)
+XTerm.vt100.backarrowKey: false
+XTerm.ttyModes: erase ^?
+
+! double-click to select whole URLs :D
+! https://scarygliders.net/2011/12/01/customize-xterm-the-original-and-best-terminal/
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
+! Tips: Left and right selection (text selection using left button for beginning and right button for end)
+! Tips: Triple Click ( 1 click = nothing, 2 click = select word, 3 click = select line )
+!
+! XTerm*on3Clicks: regex [[:alpha:]]+://([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+XTerm*on3Clicks: regex ([[:alpha:]]+://)?([[:alnum:]!#+,./=?@_~-]|(%[[:xdigit:]][[:xdigit:]]))+
+
+! <BtnUp>:select-end(SELECT, CUT_BUFFER0) \n\
+! Ctrl <Btn4Down>:scroll-back(1,halfpage,m) \n\
+! <Btn4Down>:scroll-back(5,line,m) \n\
+! Ctrl <Btn5Down>:scroll-forw(1,halfpage,m) \n\
+! <Btn5Down>:scroll-forw(5,line,m) \n\
+
+!    Ctrl <Key>M: maximize() \n\
+!    Ctrl <Key>R: restore() \n\
+!                 Shift <KeyPress> Prior:scroll-back(1,halfpage) \n\
+!                  Shift <KeyPress> Next:scroll-forw(1,halfpage) \n\
+!                Shift <KeyPress> Select:select-cursor-start() \
+!                                        select-cursor-end(SELECT, CUT_BUFFER0) \n\
+!                Shift <KeyPress> Insert:insert-selection(SELECT, CUT_BUFFER0) \n\
+!                        Alt <Key>Return:fullscreen() \n\
+!               <KeyRelease> Scroll_Lock:scroll-lock() \n\
+!           Shift~Ctrl <KeyPress> KP_Add:larger-vt-font() \n\
+!           Shift Ctrl <KeyPress> KP_Add:smaller-vt-font() \n\
+!           Shift <KeyPress> KP_Subtract:smaller-vt-font() \n\
+!                       ~Meta <KeyPress>:insert-seven-bit() \n\
+!                        Meta <KeyPress>:insert-eight-bit() \n\
+!                       !Ctrl <Btn1Down>:popup-menu(mainMenu) \n\
+!                       ~Meta <Btn1Down>:select-start() \n\
+!                     ~Meta <Btn1Motion>:select-extend() \n\
+!                       !Ctrl <Btn2Down>:popup-menu(vtMenu) \n\
+!                 ~Ctrl ~Meta <Btn2Down>:ignore() \n\
+!                        Meta <Btn2Down>:clear-saved-lines() \n\
+!                   ~Ctrl ~Meta <Btn2Up>:insert-selection(SELECT, CUT_BUFFER0) \n\
+!                       !Ctrl <Btn3Down>:popup-menu(fontMenu) \n\
+!                 ~Ctrl ~Meta <Btn3Down>:start-extend() \n\
+!                     ~Meta <Btn3Motion>:select-extend() \n\
+!                        Ctrl <Btn4Down>:scroll-back(1,halfpage,m) \n\
+!                             <Btn4Down>:scroll-back(5,line,m)     \n\
+!                        Ctrl <Btn5Down>:scroll-forw(1,halfpage,m) \n\
+!                                <BtnUp>:select-end(SELECT, CUT_BUFFER0) \n\
+!                              <BtnDown>:ignore()
+
+
+
+! http://forums.fedoraforum.org/showpost.php?p=1538211&postcount=3
+! https://stackoverflow.com/a/29551654
+! XTerm*title: xterm
+XTerm*background: black
+XTerm*foreground: WhiteSmoke
+! XTerm*transparent: true
+! XTerm*shading: 30
+
+! XTerm*depth: 32
+! XTerm*background: rgba:0000/0000/0200/c800
+
+
+! XTerm*pointerColor: white
+! XTerm*pointerColorBackground: #011622
+! XTerm*cursorColor: #EBD27D
+! XTerm*internalBorder: 3
+! XTerm*loginShell: true
+! XTerm*scrollBar: false
+! XTerm*scrollKey: true
+! XTerm*saveLines: 1250
+! XTerm*multiClickTime: 250
+! XTerm*Geometry: 140x50+110+60
+XTerm*renderFont: true
+
+! set fontsize
+! xterm*font:     *-fixed-*-*-*-24-*
+! set font
+! xterm*faceName: Monospace
+! }}}
+
+! Black
+*color0:   #000000
+*color8:   #555753
+
+! Red
+*color1:   #cc0000
+*color9:   #ef2929
+
+! Green
+*color2:   #4e9a06
+*color10:  #8ae234
+
+! Yellow
+*color3:   #c4a000
+*color11:  #fce94f
+
+! Blue
+*color4:   #3465a4
+*color12:  #729fcf
+
+! Magenta
+*color5:   #75507b
+*color13:  #ad7fa8
+
+! Cyan
+*color6:   #06989a
+*color14:  #34e2e2
+
+! White
+*color7:   #ffffff
+*color15:  #ffffff
+
+! vim: et sw=2 syn=xdefaults
