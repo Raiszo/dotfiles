@@ -9,7 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides zoom-window nyan-mode farmhouse-theme yasnippet zoom-window))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window org-bullets))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -21,7 +21,6 @@
 ;; 	(interactive)
 ;; 	  (insert "\t"))
 ;; (global-set-key [tab] 'tab-to-tab-stop) ; same as Ctrl+i
-;; (electric-indent-mode 1)
 
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/intento1.el")
@@ -51,13 +50,6 @@
 ;;(ac-config-default)
 ;;(add-hook 'js2-mode-hook 'ac-js2-mode)
 
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-(setq-default js2-basic-offset 2)
-;;(add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
-
-
 ;;tern :D shonny
 (require 'company)
 (require 'company-tern)
@@ -66,6 +58,13 @@
 													 (tern-mode t)
 													 (company-mode)))
 (setq js2-strict-missing-semi-warning nil)
+
+
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+;; (setq-default js2-basic-offset 2)
+(add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
 
 (setq company-dabbrev-downcase 0)
 (setq company-idle-delay 0)
@@ -126,6 +125,19 @@
 (yas-reload-all)
 (add-hook 'js2-mode-hook #'yas-minor-mode)
 
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((lisp . t)
+	 (C . t)
+	 (emacs-lisp . t)
+	 (latex . t)
+	 (mongo . t)))
+(setq org-confirm-babel-evaluate nil)
+(require 'ob-js)
+
 ;; more space in GUI mode :D
 (setq inhibit-startup-screen t)
 (menu-bar-mode -1)
@@ -142,26 +154,9 @@
 
 ;; (setq org-src-window-setup 'current-window)
 (require 'org)
+(add-to-list 'org-src-lang-modes '("js" . js2))
 (set-face-attribute 'org-meta-line nil :background "black" :foreground "pink")
 (set-face-attribute 'org-block-begin-line nil :background "black" :foreground "green")
 (set-face-attribute 'org-block-end-line nil :background "black" :foreground "green")
 
-
 (set-face-attribute 'default nil :font "DejaVu Sans Mono Nerd Font")
-
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-	 (quote
-		("cdd26fa6a8c6706c9009db659d2dffd7f4b0350f9cc94e5df657fa295fffec71" default))))
