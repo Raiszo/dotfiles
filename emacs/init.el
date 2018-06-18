@@ -9,7 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window org-bullets))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -72,8 +72,10 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 
-(require 'neotree) 
+(require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+(require 'all-the-icons)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
 (require 'multiple-cursors)
 (global-set-key (kbd "C-c C-v") 'mc/edit-lines)
@@ -98,7 +100,7 @@
 (setq highlight-indent-guides-method 'character)
 
 (global-linum-mode t)
-(setq linum-format "%d ")
+(setq linum-format "%d")
 (show-paren-mode)
 (electric-pair-mode)
 (ido-mode t)
@@ -110,11 +112,8 @@
 (delete* "M-o" term-bind-key-alist :test 'equal :key 'car)
 ;; No need to add-to-list, just to be clear with the new functionality :D
 (add-to-list 'term-bind-key-alist '("M-o" . ace-window))
-(assoc "M-o" term-bind-key-alist)
+;; (assoc "M-o" term-bind-key-alist)
 
-(require 'powerline)
-(powerline-center-theme)
-(setq powerline-default-separator 'wave)
 
 ;; Setting transparency, not working like urxvt
 (set-frame-parameter (selected-frame) 'alpha '(85 85))
@@ -159,4 +158,55 @@
 (set-face-attribute 'org-block-begin-line nil :background "black" :foreground "green")
 (set-face-attribute 'org-block-end-line nil :background "black" :foreground "green")
 
+(require 'org-trello)
+(setq org-trello-files (directory-files "~/Documents/trello" t "\\.org$"))
+
+
+(require 'emojify)
+(add-hook 'after-init-hook #'global-emojify-mode)
+(setq emojify-user-emojis '((":trollface:" . (("name" . "Troll Face")
+																							("image" . "~/.emacs.d/emojis/custom/trollface.png")
+                                              ("style" . "github")))
+														(":kappa:" . (("name". "Kappa")
+																					("image" . "~/.emacs.d/emojis/custom/kappa.png")
+																					("style" . "github")))
+														))
+;; If emojify is already loaded refresh emoji data
+(when (featurep 'emojify)
+  (emojify-set-emoji-data))
+(emojify-mode-line-mode)
+
 (set-face-attribute 'default nil :font "DejaVu Sans Mono Nerd Font")
+
+;; (require 'powerline)
+;; (powerline-default-theme)
+;; (setq powerline-default-separator 'wave)
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+
+(require 'telephone-line)
+(defface my-indianRed '((t (:foreground "white" :background "IndianRed1"))) "")
+(defface my-gold '((t (:foreground "black" :background "gold"))) "")
+
+;; this not working yet D:
+(telephone-line-defsegment* s1 ()
+	":dagger:")
+
+(setq telephone-line-faces
+			'((indianGold . (my-gold . my-indianRed))
+				(accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+				(nil . (mode-line . mode-line-inactive))))
+(setq telephone-line-lhs
+      '((indianGold . (telephone-line-process-segment
+											telephone-line-vc-segment
+											telephone-line-erc-modified-channels-segment))
+        (nil			. (telephone-line-buffer-segment
+										 telephone-line-major-mode-segment
+										 telephone-line-nyan-segment))))
+(setq telephone-line-rhs
+      '((nil    . (telephone-line-misc-info-segment))
+        (accent . (telephone-line-minor-mode-segment))
+        (indianGold   . (telephone-line-airline-position-segment))))
+(telephone-line-mode 1)
