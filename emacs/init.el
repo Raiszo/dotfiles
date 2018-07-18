@@ -9,7 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -110,6 +110,7 @@
 (require 'multi-term)
 ;; want to use Ace-window here, so delete it from the alist
 (delete* "M-o" term-bind-key-alist :test 'equal :key 'car)
+;; (delete* "M-^?" term-bind-key-alist :test 'equal :key 'car)
 ;; No need to add-to-list, just to be clear with the new functionality :D
 (add-to-list 'term-bind-key-alist '("M-o" . ace-window))
 ;; (assoc "M-o" term-bind-key-alist)
@@ -126,6 +127,7 @@
 
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -210,3 +212,17 @@
         (accent . (telephone-line-minor-mode-segment))
         (indianGold   . (telephone-line-airline-position-segment))))
 (telephone-line-mode 1)
+
+
+;; (setq telephone-line-lhs
+;;       '((evil   . (telephone-line-evil-tag-segment))
+;;         (accent . (telephone-line-vc-segment
+;;                    telephone-line-erc-modified-channels-segment
+;;                    telephone-line-process-segment))
+;;         (nil    . (telephone-line-minor-mode-segment
+;;                    telephone-line-buffer-segment))))
+;; (setq telephone-line-rhs
+;;       '((nil    . (telephone-line-misc-info-segment))
+;;         (accent . (telephone-line-major-mode-segment))
+;;         (evil   . (telephone-line-airline-position-segment))))
+;; (telephone-line-mode 1)
