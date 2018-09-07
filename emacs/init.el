@@ -7,9 +7,9 @@
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-													("melpa" . "http://melpa.milkbox.net/packages/")) )
+												 ("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -25,7 +25,10 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/intento1.el")
 ;;(load-theme 'monokai-theme)
-(add-hook 'after-init-hook (lambda () (load-theme 'farmhouse-dark)))
+(add-hook 'after-init-hook (lambda () (load-theme 'darkokai)))
+(setq darkokai-mode-line-padding 1)
+(load-theme 'darkokai t)
+
 (defun on-after-init ()
   (unless (display-graphic-p (selected-frame))
     (set-face-background 'default "unspecified-bg" (selected-frame))))
@@ -60,6 +63,10 @@
 (setq js2-strict-missing-semi-warning nil)
 
 
+;; js-mode
+(setq js-indent-level 2)
+
+;; js2-mode
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
@@ -178,14 +185,14 @@
   (emojify-set-emoji-data))
 (emojify-mode-line-mode)
 
-(set-face-attribute 'default nil :font "DejaVu Sans Mono Nerd Font")
-
+(set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
+(set-face-attribute 'default nil :height 135)
 ;; (require 'powerline)
 ;; (powerline-default-theme)
 ;; (setq powerline-default-separator 'wave)
 
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-¿") 'er/expand-region)
 
 
 (require 'telephone-line)
@@ -212,6 +219,13 @@
         (accent . (telephone-line-minor-mode-segment))
         (indianGold   . (telephone-line-airline-position-segment))))
 (telephone-line-mode 1)
+
+;; Magit
+(global-set-key [f5] 'magit-status)
+
+(require 'phi-search)
+(global-set-key (kbd "C-s") 'phi-search)
+(global-set-key (kbd "C-r") 'phi-search-backward)
 
 
 ;; (setq telephone-line-lhs
