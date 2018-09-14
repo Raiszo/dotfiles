@@ -7,7 +7,7 @@
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-												 ("melpa" . "http://melpa.milkbox.net/packages/")) )
+													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
 (setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search))
 
@@ -81,6 +81,8 @@
 
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+;; (setq neo-smart-open t)
+
 (require 'all-the-icons)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
