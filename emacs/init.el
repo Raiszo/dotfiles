@@ -7,9 +7,15 @@
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-													("melpa" . "http://melpa.milkbox.net/packages/")) )
+												 ("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell))
+
+;; macos only stuff >:v, pice of crap
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize)
+  (setq mac-right-option-modifier 'none))
+
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -160,8 +166,6 @@
 
 ;; (add-hook 'window-setup-hook 'on-after-init)
 
-;; Use DejaVu Sans Mono Nerd Font
-
 ;; (setq org-src-window-setup 'current-window)
 (require 'org)
 (add-to-list 'org-src-lang-modes '("js" . js2))
@@ -187,7 +191,9 @@
   (emojify-set-emoji-data))
 (emojify-mode-line-mode)
 
-(set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
+;; Use DejaVu Sans Mono Nerd Font
+
+(set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font Mono")
 (set-face-attribute 'default nil :height 135)
 ;; (require 'powerline)
 ;; (powerline-default-theme)
@@ -211,8 +217,8 @@
 				(nil . (mode-line . mode-line-inactive))))
 (setq telephone-line-lhs
       '((indianGold . (telephone-line-process-segment
-											telephone-line-vc-segment
-											telephone-line-erc-modified-channels-segment))
+											 telephone-line-vc-segment
+											 telephone-line-erc-modified-channels-segment))
         (nil			. (telephone-line-buffer-segment
 										 telephone-line-major-mode-segment
 										 telephone-line-nyan-segment))))
