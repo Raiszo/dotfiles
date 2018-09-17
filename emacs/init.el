@@ -13,7 +13,8 @@
 
 ;; macos only stuff >:v, pice of crap
 (when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (setq mac-right-option-modifier 'none))
 
 
 (dolist (package package-list)
