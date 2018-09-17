@@ -3,6 +3,6 @@
 # key: router
 # expand-env ((yas-indent-line 'fixed))
 # --
-router.${1}('/', (req,res) => {
+router.${1}('/', wrap(async (req,res) => {
 	$0
-})
+}))
