@@ -7,9 +7,9 @@
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-												 ("melpa" . "http://melpa.milkbox.net/packages/")) )
+													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package projectile persp-projectile))
 
 ;; macos only stuff >:v, pice of crap
 (when (memq window-system '(mac ns x))
@@ -67,6 +67,7 @@
 													 (tern-mode t)
 													 (company-mode)))
 (setq js2-strict-missing-semi-warning nil)
+(setq js2-include-node-externs t)
 
 
 ;; js-mode
@@ -80,7 +81,7 @@
 (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
 
 (setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0)
+(setq company-idle-delay 0.1)
 
 (require 'undo-tree)
 (global-undo-tree-mode)
@@ -114,14 +115,6 @@
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'character)
 
-(global-linum-mode t)
-(setq linum-format "%d")
-(show-paren-mode)
-(electric-pair-mode)
-(ido-mode t)
-(setq web-mode-enable-auto-closing t)
-(global-hl-line-mode +1)
-
 (require 'multi-term)
 ;; want to use Ace-window here, so delete it from the alist
 (delete* "M-o" term-bind-key-alist :test 'equal :key 'car)
@@ -129,6 +122,18 @@
 ;; No need to add-to-list, just to be clear with the new functionality :D
 (add-to-list 'term-bind-key-alist '("M-o" . ace-window))
 ;; (assoc "M-o" term-bind-key-alist)
+
+(when (version<= "26.0.50" emacs-version )
+	(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+	(set-face-attribute 'line-number-current-line nil :background "#7fffd4" :foreground "black" :weight 'bold))
+
+;; (global-linum-mode t)
+;; (setq linum-format "%d")
+(show-paren-mode)
+(electric-pair-mode)
+(ido-mode t)
+;; (setq web-mode-enable-auto-closing t)
+(global-hl-line-mode +1)
 
 
 ;; Setting transparency, not working like urxvt
@@ -150,7 +155,8 @@
 	 (C . t)
 	 (emacs-lisp . t)
 	 (latex . t)
-	 (mongo . t)))
+	 (mongo . t)
+	 (sql . t)))
 (setq org-confirm-babel-evaluate nil)
 (require 'ob-js)
 
@@ -200,7 +206,10 @@
 ;; (setq powerline-default-separator 'wave)
 
 (require 'expand-region)
-(global-set-key (kbd "C-¿") 'er/expand-region)
+(if (memq window-system '(mac ns x))
+		(global-set-key (kbd "C-¡") 'er/expand-region)
+	(global-set-key (kbd "C-¿") 'er/expand-region))
+
 
 
 (require 'telephone-line)
@@ -217,8 +226,8 @@
 				(nil . (mode-line . mode-line-inactive))))
 (setq telephone-line-lhs
       '((indianGold . (telephone-line-process-segment
-											 telephone-line-vc-segment
-											 telephone-line-erc-modified-channels-segment))
+											telephone-line-vc-segment
+											telephone-line-erc-modified-channels-segment))
         (nil			. (telephone-line-buffer-segment
 										 telephone-line-major-mode-segment
 										 telephone-line-nyan-segment))))
@@ -230,11 +239,38 @@
 
 ;; Magit
 (global-set-key [f5] 'magit-status)
+;; ibuffer, I like to kill buffers :)
+(global-set-key [f6] 'ibuffer)
+
+
 
 (require 'phi-search)
 (global-set-key (kbd "C-s") 'phi-search)
 (global-set-key (kbd "C-r") 'phi-search-backward)
 
+;; Python
+(elpy-enable)
+;; (global-flycheck-mode)
+;; (when (require 'flycheck nil t)
+;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
+(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+
+;; persp-mode
+(projectile-mode +1)
+(persp-mode)
+(require 'persp-projectile)
+(define-key projectile-mode-map (kbd "C-c p") 'persp-switch)
+
+;; (use-package persp-mode
+;;   :ensure
+;;   :init
+;; 	(add-hook 'after-init-hook #'persp-mode)
+;; 	:config
+;;   (setq wg-morph-on nil)
+;; 	(setq persp-auto-resume-time 0)
+;; 	(setq persp-auto-save-opt 0)
+;;   (setq persp-autokill-buffer-on-remove 'kill-weak))
 
 ;; (setq telephone-line-lhs
 ;;       '((evil   . (telephone-line-evil-tag-segment))
