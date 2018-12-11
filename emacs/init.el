@@ -81,7 +81,8 @@
 (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
 
 (setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0.1)
+(setq company-idle-delay 0.5)
+(setq company-dabbrev-code-ignore-case nil)
 
 (require 'undo-tree)
 (global-undo-tree-mode)
@@ -207,7 +208,7 @@
 
 (require 'expand-region)
 (if (memq window-system '(mac ns x))
-		(global-set-key (kbd "C-¡") 'er/expand-region)
+		(global-set-key (kbd "C-=") 'er/expand-region)
 	(global-set-key (kbd "C-¿") 'er/expand-region))
 
 
@@ -261,6 +262,17 @@
 (persp-mode)
 (require 'persp-projectile)
 (define-key projectile-mode-map (kbd "C-c p") 'persp-switch)
+
+(use-package web-mode
+	:mode (("\\.html$" . web-mode)
+				 ("\\.ejs$" . web-mode))
+	)
+
+(use-package emmet-mode
+	:config
+	(add-hook 'sgml-mode-hook 'emmet-mode)
+	(add-hook 'web-mode-hook 'emmet-mode)
+	)
 
 ;; (use-package persp-mode
 ;;   :ensure
