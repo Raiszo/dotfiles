@@ -9,7 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package projectile persp-projectile))
+(setq package-list '(js2-mode undo-tree company-tern company ace-window neotree multiple-cursors multi-term monokai-theme powerline magit highlight-indent-guides ob-mongo zoom-window nyan-mode farmhouse-theme yasnippet zoom-window emojify org-bullets org-trello all-the-icons expand-region telephone-line markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package projectile persp-projectile dockerfile-mode nginx-mode yaml-mode))
 
 ;; macos only stuff >:v, pice of crap
 (when (memq window-system '(mac ns x))
@@ -42,14 +42,13 @@
 (add-hook 'window-setup-hook 'on-after-init)
 
 ;;Custom tab length
-(setq-default tab-width 2)
+;; (setq-default tab-width 2)
 (add-hook 'after-init-hook 'global-company-mode)
 
 
-(setq-default tab-always-indent nil)
+;; (setq-default tab-always-indent t)
 ;; make return key also do indent, globally
 (electric-indent-mode 1)
-;;(setq tab-stop-list (number-sequence 2 200 2))
 
 ;;(global-set-key "\M-[1;5C"    'forward-word)      ; Ctrl+right   => forward word
 ;;(global-set-key "\M-[1;5D"    'backward-word)     ; Ctrl+left    => backward word
@@ -59,29 +58,38 @@
 ;;(ac-config-default)
 ;;(add-hook 'js2-mode-hook 'ac-js2-mode)
 
-;;tern :D shonny
+
+
+;; js-mode
+;; (setq js-indent-level 2)
+
+;; js2-mode
+(require 'js2-mode)
 (require 'company)
 (require 'company-tern)
 (add-to-list 'company-backends 'company-tern)
 (add-hook 'js2-mode-hook (lambda ()
-													 (tern-mode t)
-													 (company-mode)))
+			   (tern-mode t)
+			   (company-mode)
+			   (progn (set-variable 'indent-tabs-mode nil))
+			   ))
 (setq js2-strict-missing-semi-warning nil)
 (setq js2-include-node-externs t)
 
-
-;; js-mode
-(setq js-indent-level 2)
-
-;; js2-mode
-(require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-;; (setq-default js2-basic-offset 2)
-(add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
+(setq-default js2-basic-offset 4)
+;; (setq backward-delete-char-untabify-method 'hungry)
+
+;; (setq js2-mode-hook
+;;       '(lambda () (progn
+;;                     (set-variable 'indent-tabs-mode nil))))
+
+;; (setq-default indent-tabs-mode nil)
+;; (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
 
 (setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0.5)
+(setq company-idle-delay 0)
 (setq company-dabbrev-code-ignore-case nil)
 
 (require 'undo-tree)
@@ -125,8 +133,8 @@
 ;; (assoc "M-o" term-bind-key-alist)
 
 (when (version<= "26.0.50" emacs-version )
-	(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-	(set-face-attribute 'line-number-current-line nil :background "#7fffd4" :foreground "black" :weight 'bold))
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (set-face-attribute 'line-number-current-line nil :background "#7fffd4" :foreground "black" :weight 'bold))
 
 ;; (global-linum-mode t)
 ;; (setq linum-format "%d")
@@ -263,36 +271,24 @@
 (require 'persp-projectile)
 (define-key projectile-mode-map (kbd "C-c p") 'persp-switch)
 
+(defun my-web-mode-hook ()
+  (setq web-mode-markup-indent-offset 2)
+  (web-mode-use-tabs)
+  (setq-default tab-width 4)
+)
 (use-package web-mode
-	:mode (("\\.html$" . web-mode)
-				 ("\\.ejs$" . web-mode))
-	)
+  :mode (("\\.html$" . web-mode)
+	 ("\\.ejs$" . web-mode))
+  :init
+  (add-hook 'web-mode-hook  'my-web-mode-hook)
+  )
 
 (use-package emmet-mode
-	:config
-	(add-hook 'sgml-mode-hook 'emmet-mode)
-	(add-hook 'web-mode-hook 'emmet-mode)
-	)
+  :config
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'web-mode-hook 'emmet-mode)
+  )
 
-;; (use-package persp-mode
-;;   :ensure
-;;   :init
-;; 	(add-hook 'after-init-hook #'persp-mode)
-;; 	:config
-;;   (setq wg-morph-on nil)
-;; 	(setq persp-auto-resume-time 0)
-;; 	(setq persp-auto-save-opt 0)
-;;   (setq persp-autokill-buffer-on-remove 'kill-weak))
-
-;; (setq telephone-line-lhs
-;;       '((evil   . (telephone-line-evil-tag-segment))
-;;         (accent . (telephone-line-vc-segment
-;;                    telephone-line-erc-modified-channels-segment
-;;                    telephone-line-process-segment))
-;;         (nil    . (telephone-line-minor-mode-segment
-;;                    telephone-line-buffer-segment))))
-;; (setq telephone-line-rhs
-;;       '((nil    . (telephone-line-misc-info-segment))
-;;         (accent . (telephone-line-major-mode-segment))
-;;         (evil   . (telephone-line-airline-position-segment))))
-;; (telephone-line-mode 1)
+(use-package restclient-mode
+  :mode (("\\.http$" . restclient-mode))
+  )
