@@ -64,33 +64,27 @@
 ;; (setq js-indent-level 2)
 
 ;; js2-mode
-(require 'js2-mode)
-(require 'company)
-(require 'company-tern)
-(add-to-list 'company-backends 'company-tern)
-(add-hook 'js2-mode-hook (lambda ()
-			   (tern-mode t)
-			   (company-mode)
-			   (progn (set-variable 'indent-tabs-mode nil))
-			   ))
 (setq js2-strict-missing-semi-warning nil)
 (setq js2-include-node-externs t)
 
+;; LSP mode config
+(use-package lsp-mode
+  :commands lsp
+	:init
+	(setq lsp-enable-indentation nil)
+	(setq lsp-prefer-flymake nil)
+	)
+(add-hook 'python-mode-hook #'lsp)
+(require 'company-lsp)
+(push 'company-lsp company-backends)
+
+;; js-mode
+;; (setq js-indent-level 2)
+
+(require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 (setq-default js2-basic-offset 4)
-;; (setq backward-delete-char-untabify-method 'hungry)
-
-;; (setq js2-mode-hook
-;;       '(lambda () (progn
-;;                     (set-variable 'indent-tabs-mode nil))))
-
-;; (setq-default indent-tabs-mode nil)
-;; (add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
-
-(setq company-dabbrev-downcase 0)
-(setq company-idle-delay 0)
-(setq company-dabbrev-code-ignore-case nil)
 
 (require 'undo-tree)
 (global-undo-tree-mode)
@@ -291,4 +285,16 @@
 
 (use-package restclient-mode
   :mode (("\\.http$" . restclient-mode))
+  )
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1)
+  )
+
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (rainbow-delimiters-mode 1)
   )
