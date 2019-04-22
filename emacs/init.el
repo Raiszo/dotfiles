@@ -9,7 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 													("melpa" . "http://melpa.milkbox.net/packages/")) )
 
-(setq package-list '(js2-mode monokai-theme ob-mongo farmhouse-theme org-trello all-the-icons markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package projectile persp-projectile dockerfile-mode nginx-mode yaml-mode))
+(setq package-list '(js2-mode monokai-theme ob-mongo farmhouse-theme org-trello all-the-icons markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package dockerfile-mode nginx-mode yaml-mode))
 
 ;; macos only stuff >:v, pice of crap
 (when (memq window-system '(mac ns x))
@@ -42,7 +42,7 @@
 (add-hook 'window-setup-hook 'on-after-init)
 
 ;; (setq-default tab-width 2)
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
 
 
 ;; (setq-default tab-always-indent t)
@@ -52,20 +52,6 @@
 ;; js2-mode
 (setq js2-strict-missing-semi-warning nil)
 (setq js2-include-node-externs t)
-
-;; LSP mode config
-(use-package lsp-mode
-  :commands lsp
-  :init
-  (setq lsp-enable-indentation nil)
-  (setq lsp-prefer-flymake nil)
-  )
-(add-hook 'python-mode-hook #'lsp)
-;; (require 'company-lsp)
-;; (push 'company-lsp company-backends)
-
-;; js-mode
-;; (setq js-indent-level 2)
 
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -269,19 +255,52 @@
   )
 
 
-;; Python
-(elpy-enable)
-;; (global-flycheck-mode)
-;; (when (require 'flycheck nil t)
-;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
-(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1)
+  )
 
-;; persp-mode
-(projectile-mode +1)
-(persp-mode)
-(require 'persp-projectile)
-(define-key projectile-mode-map (kbd "C-c p") 'persp-switch)
+(use-package persp-projectile
+  :ensure t
+  :bind ("C-c p" . persp-switch)
+  :config
+  (persp-mode 1)
+  )
+
+;; (use-package pipenv
+;;   :hook (python-mode . pipenv-mode)
+;;   :init
+;;   (setq
+;;    pipenv-projectile-after-switch-function
+;;    #'pipenv-projectile-after-switch-extended)
+;;   (setq pipenv-with-flycheck nil)
+;;   )
+
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-ignore-duplicate t)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  )
+(use-package company-lsp
+  :commands company-lsp
+  :config
+  (setq company-dabbrev-downcase 0)
+  (setq company-idle-delay 0)
+  )
+
+
+;; LSP mode config
+(use-package lsp
+  :ensure lsp-mode
+  :commands lsp
+  :hook ((python-mode . lsp))
+  :config
+  (setq lsp-enable-indentation nil)
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-auto-guess-root t)
+  )
 
 ;; (defun my-web-mode-hook ()
 ;;   (setq web-mode-markup-indent-offset 2)
@@ -301,7 +320,8 @@
 ;;   (add-hook 'web-mode-hook 'emmet-mode)
 ;;   )
 
-(use-package restclient-mode
+(use-package restclient
+  :ensure t
   :mode (("\\.http$" . restclient-mode))
   )
 
