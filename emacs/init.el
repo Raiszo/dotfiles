@@ -1,9 +1,6 @@
 (package-initialize)
 (setq package-check-signature nil)
 
-;; (set-frame-parameter (selected-frame) 'alpha '(85 . 50))
-;; (add-to-list 'default-frame-alist '(alpha . (85 . 50)))
-
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -116,10 +113,11 @@
 
 (when (version<= "26.0.50" emacs-version )
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-  (set-face-attribute 'line-number-current-line nil :background "#7fffd4" :foreground "black" :weight 'bold))
+  (set-face-attribute 'line-number-current-line nil
+		      :background "#7fffd4"
+		      :foreground "black"
+		      :weight 'bold))
 
-;; (global-linum-mode t)
-;; (setq linum-format "%d")
 (show-paren-mode)
 (electric-pair-mode)
 (ido-mode t)
@@ -127,16 +125,15 @@
 
 
 ;; Setting transparency, not working like urxvt
-;; (set-frame-parameter (selected-frame) 'alpha '(85 85))
-;; (add-to-list 'default-frame-alist '(alpha 85 85))
+(set-frame-parameter (selected-frame) 'alpha '(85 85))
+(add-to-list 'default-frame-alist '(alpha 85 85))
 
 (use-package yasnippet
   :ensure t
-  :hook (js2-mode . yas-minor-mode)
   :config
   (yas-load-directory "~/.emacs.d/snippets")
   (yas-reload-all)
-  )
+  (add-hook 'js2-mode-hook #'yas-minor-mode))
 
 (use-package org-bullets
   :ensure t
@@ -198,11 +195,8 @@
 
 ;; Use DejaVu Sans Mono Nerd Font
 
-;; (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font Mono")
-;; (set-face-attribute 'default nil :height 135)
-;; (require 'powerline)
-;; (powerline-default-theme)
-;; (setq powerline-default-separator 'wave)
+(set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font Mono")
+(set-face-attribute 'default nil :height 135)
 
 (use-package expand-region
   :ensure t
@@ -278,29 +272,45 @@
 ;;   )
 
 (use-package lsp-ui
+  :ensure t
   :commands lsp-ui-mode
+  :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-ignore-duplicate t)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  )
+  (setq lsp-ui-sideline-enable nil))
 (use-package company-lsp
+  :ensure t
   :commands company-lsp
   :config
   (setq company-dabbrev-downcase 0)
-  (setq company-idle-delay 0)
-  )
+  (setq company-idle-delay 0))
 
+(use-package company               
+  :ensure t
+  :defer t
+  :init (global-company-mode)
+  :config
+  (progn
+    (setq company-tooltip-align-annotations t
+          ;; Easy navigation to candidates with M-<n>
+          company-show-numbers t)
+    (setq company-dabbrev-downcase nil))
+  :diminish company-mode)
+(use-package company-quickhelp          ; Documentation popups for Company
+  :ensure t
+  :defer t
+  :init (add-hook 'global-company-mode-hook #'company-quickhelp-mode))
 
 ;; LSP mode config
 (use-package lsp
   :ensure lsp-mode
   :commands lsp
-  :hook ((python-mode . lsp))
+  :hook ((python-mode . lsp)
+	 (js2-mode . lsp))
   :config
   (setq lsp-enable-indentation nil)
   (setq lsp-prefer-flymake nil)
-  (setq lsp-auto-guess-root t)
-  )
+  (setq lsp-auto-guess-root t))
 
 ;; (defun my-web-mode-hook ()
 ;;   (setq web-mode-markup-indent-offset 2)
@@ -320,6 +330,12 @@
 ;;   (add-hook 'web-mode-hook 'emmet-mode)
 ;;   )
 
+(use-package yaml-mode
+  :ensure t
+  :config
+  (setq yaml-indent-offset 4)
+  )
+
 (use-package restclient
   :ensure t
   :mode (("\\.http$" . restclient-mode))
@@ -328,11 +344,37 @@
 (use-package editorconfig
   :ensure t
   :config
-  (editorconfig-mode 1)
-  )
+  (editorconfig-mode 1))
 
 (use-package rainbow-delimiters
   :ensure t
+  :hook ((python-mode . rainbow-delimiters-mode)
+	 (emacs-lisp-mode . rainbow-delimiters-mode)))
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  :bind
+  (:map global-map
+	("<f8>" . treemacs-select-window))
+ )
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+
+(use-package drag-stuff
+  :ensure t
+  :init
+  (setq drag-stuff-mode t)
   :config
-  (rainbow-delimiters-mode 1)
-  )
+  (drag-stuff-define-keys))
