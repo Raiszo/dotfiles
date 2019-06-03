@@ -4,7 +4,7 @@
 (require 'package)
 ;;Add melpa repository
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-													("melpa" . "http://melpa.milkbox.net/packages/")) )
+			 ("melpa" . "http://melpa.milkbox.net/packages/")) )
 
 (setq package-list '(js2-mode monokai-theme ob-mongo farmhouse-theme org-trello all-the-icons markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package dockerfile-mode nginx-mode yaml-mode))
 
@@ -28,9 +28,20 @@
 
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/intento1.el")
 ;;(load-theme 'monokai-theme)
-(add-hook 'after-init-hook (lambda () (load-theme 'darkokai)))
-(setq darkokai-mode-line-padding 1)
-(load-theme 'darkokai t)
+;; (add-hook 'after-init-hook (lambda () (load-theme 'darkokai)))
+;; (setq darkokai-mode-line-padding 1)
+;; (load-theme 'darkokai t)
+
+(use-package doom-themes
+  :init
+  (load-theme 'doom-dracula t)
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic t)
+  :config
+  (progn
+    (doom-themes-treemacs-config)
+    (setq doom-neotree-line-spacing 0)
+    (doom-themes-org-config)))
 
 (defun on-after-init ()
   (unless (display-graphic-p (selected-frame))
@@ -252,15 +263,39 @@
 (use-package projectile
   :ensure t
   :config
-  (projectile-mode +1)
-  )
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
 
-(use-package persp-projectile
+(use-package persp-mode
+  :ensure persp-projectile
+  :commands persp-mode 
+  ;; :bind ("C-c p" . persp-switch)
+  :bind ("M-s" . projectile-persp-switch-project))
+
+(use-package treemacs
   :ensure t
-  :bind ("C-c p" . persp-switch)
+  :defer t
+  :init
+  :bind
+  (:map global-map
+	("<f8>" . treemacs-select-window))
   :config
-  (persp-mode 1)
-  )
+  (progn
+    (setq treemacs-width 25))
+ )
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
 
 ;; (use-package pipenv
 ;;   :hook (python-mode . pipenv-mode)
@@ -351,30 +386,43 @@
   :hook ((python-mode . rainbow-delimiters-mode)
 	 (emacs-lisp-mode . rainbow-delimiters-mode)))
 
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  :bind
-  (:map global-map
-	("<f8>" . treemacs-select-window))
- )
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
-
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
-
 (use-package drag-stuff
   :ensure t
   :init
   (setq drag-stuff-mode t)
   :config
   (drag-stuff-define-keys))
+
+(set-face-attribute 'default nil :font "Fira Code" :height 115)
+
+(when (window-system)
+  (set-frame-font "Fira Code"))
+(let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+               (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+               (36 . ".\\(?:>\\)")
+               (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+               (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+               (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+               (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+               (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+               (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+               (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+               (48 . ".\\(?:x[a-zA-Z]\\)")
+               (58 . ".\\(?:::\\|[:=]\\)")
+               (59 . ".\\(?:;;\\|;\\)")
+               (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+               (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+               (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+               (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+               (91 . ".\\(?:]\\)")
+               (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+               (94 . ".\\(?:=\\)")
+               (119 . ".\\(?:ww\\)")
+               (123 . ".\\(?:-\\)")
+               (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+               (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+               )
+             ))
+  (dolist (char-regexp alist)
+    (set-char-table-range composition-function-table (car char-regexp)
+                          `([,(cdr char-regexp) 0 font-shape-gstring]))))
