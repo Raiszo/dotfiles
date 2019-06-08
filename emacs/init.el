@@ -269,8 +269,8 @@
 
 (use-package persp-mode
   :ensure persp-projectile
-  :commands persp-mode 
-  ;; :bind ("C-c p" . persp-switch)
+  :init
+  (persp-mode t)
   :bind ("M-s" . projectile-persp-switch-project))
 
 (use-package treemacs
