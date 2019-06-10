@@ -367,9 +367,11 @@
 
 (use-package yaml-mode
   :ensure t
+  :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
   (setq yaml-indent-offset 4)
-  )
+  :custom-face
+  (font-lock-variable-name-face ((t (:foreground "violet")))))
 
 (use-package restclient
   :ensure t
