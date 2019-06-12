@@ -20,9 +20,9 @@
     (package-install package)))
 
 ;; (defun my-insert-tab-char ()
-;; 	"Insert a tab char. (ASCII 9, \t)"
-;; 	(interactive)
-;; 	  (insert "\t"))
+;;	"Insert a tab char. (ASCII 9, \t)"
+;;	(interactive)
+;;	  (insert "\t"))
 ;; (global-set-key [tab] 'tab-to-tab-stop) ; same as Ctrl+i
 
 
@@ -40,7 +40,6 @@
   :config
   (progn
     (doom-themes-treemacs-config)
-    (setq doom-neotree-line-spacing 0)
     (doom-themes-org-config)))
 
 (defun on-after-init ()
@@ -106,11 +105,10 @@
 
 (use-package highlight-indent-guides
   :ensure t
-  :hook (prog-mode . highlight-indent-guides-mode)
+  :hook ((prog-mode yaml-mode) . highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character)
-  (highlight-indent-guides-mode 1)
-  )
+  (highlight-indent-guides-mode 1))
 
 (use-package multi-term
   :ensure t
@@ -220,29 +218,29 @@
   (defface my-indianRed '((t (:foreground "white" :background "IndianRed1"))) "")
   (defface my-gold '((t (:foreground "black" :background "gold"))) "")
   (setq telephone-line-faces
-  	'((indianGold . (my-gold . my-indianRed))
-  	  (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
-  	  (nil . (mode-line . mode-line-inactive))))
+	'((indianGold . (my-gold . my-indianRed))
+	  (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+	  (nil . (mode-line . mode-line-inactive))))
   (setq telephone-line-lhs
-  	'((indianGold . (telephone-line-vc-segment
+	'((indianGold . (telephone-line-vc-segment
 			 telephone-line-erc-modified-channels-segment
 			 telephone-line-process-segment))
-  	  (nil . (telephone-line-major-mode-segment
-  		  telephone-line-buffer-segment))
+	  (nil . (telephone-line-major-mode-segment
+		  telephone-line-buffer-segment))
 	  ;; when splitting the window it gets trimmed to 1 ;'v
 	  ;; refer to this issue https://github.com/dbordak/telephone-line/issues/41
 	  (nil . (telephone-line-nyan-segment))
 	  ))
   (setq telephone-line-rhs
-  	'((nil . (telephone-line-misc-info-segment))
-  	  (accent . (telephone-line-minor-mode-segment))
-  	  (indianGold . (telephone-line-airline-position-segment))
+	'((nil . (telephone-line-misc-info-segment))
+	  (accent . (telephone-line-minor-mode-segment))
+	  (indianGold . (telephone-line-airline-position-segment))
 	  ))
   (telephone-line-mode 1)
   )
 ;; this not working yet D:
 ;; (telephone-line-defsegment* s1 ()
-;; 	":dagger:")
+;;	":dagger:")
 
 (use-package magit
   :ensure t
@@ -256,22 +254,22 @@
 (use-package phi-search
   :ensure t
   :bind (("C-s" . phi-search)
-	 ("C-r" . phi-search-backward))
-  )
+	 ("C-r" . phi-search-backward)))
 
 
 (use-package projectile
   :ensure t
   :config
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
 
 (use-package persp-mode
   :ensure persp-projectile
   :init
-  (persp-mode t)
-  :bind ("M-s" . projectile-persp-switch-project))
+  (persp-mode)
+  :bind (("M-s" . projectile-persp-switch-project)
+	 ("C-c p" . 'persp-switch)))
 
 (use-package treemacs
   :ensure t
@@ -282,8 +280,8 @@
 	("<f8>" . treemacs-select-window))
   :config
   (progn
-    (setq treemacs-width 25))
- )
+    (setq treemacs-width 25)))
+
 (use-package treemacs-projectile
   :after treemacs projectile
   :ensure t)
@@ -296,6 +294,28 @@
 (use-package treemacs-magit
   :after treemacs magit
   :ensure t)
+
+(use-package helm
+  :ensure t
+  :bind (("M-x" . helm-M-x)
+	 ("C-x C-f" . helm-find-files))
+  :config
+  (bind-keys :map helm-map
+             ("TAB" . helm-execute-persistent-action))
+  ;; (use-package helm-projectile
+  ;;   :ensure t
+  ;;   :config
+  ;;   (helm-projectile-on))
+  (helm-autoresize-mode 1)
+  (helm-mode 1))
+
+;; (use-package origami
+;;   :bind (("C-c TAB" . origami-recursively-toggle-node)
+;;          ("C-\\" . origami-recursively-toggle-node)
+;;          ("M-\\" . origami-close-all-nodes)
+;;          ("M-+" . origami-open-all-nodes))
+;;   :init
+;;   (global-origami-mode))
 
 ;; (use-package pipenv
 ;;   :hook (python-mode . pipenv-mode)
@@ -372,6 +392,9 @@
   (setq yaml-indent-offset 4)
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
+
+(use-package json-mode
+  :ensure t)
 
 (use-package restclient
   :ensure t
