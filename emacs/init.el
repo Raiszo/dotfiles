@@ -8,16 +8,15 @@
 
 (setq package-list '(js2-mode monokai-theme ob-mongo farmhouse-theme org-trello all-the-icons markdown-mode darkokai-theme phi-search nodejs-repl exec-path-from-shell ob-sql-mode elpy use-package dockerfile-mode nginx-mode yaml-mode))
 
-;; macos only stuff >:v, pice of crap
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize)
-  (setq mac-right-option-modifier 'none))
-
-
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-refresh-contents)
     (package-install package)))
+
+;; macos only stuff >:v, pice of crap
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize)
+  (setq mac-right-option-modifier 'none))
 
 ;; (defun my-insert-tab-char ()
 ;;	"Insert a tab char. (ASCII 9, \t)"
@@ -33,6 +32,7 @@
 ;; (load-theme 'darkokai t)
 
 (use-package doom-themes
+  :ensure t
   :init
   (load-theme 'doom-dracula t)
   (setq doom-themes-enable-bold t)
@@ -92,16 +92,14 @@
   :ensure t
   :bind ("C-x 4" . zoom-window-zoom)
   :custom
-  (zoom-window-mode-line-color "DarkViolet" "Distinctive color when using zoom")
-  )
+  (zoom-window-mode-line-color "DarkViolet" "Distinctive color when using zoom"))
 
 (use-package nyan-mode
   :ensure t
   :config
   (nyan-mode 1)
   (nyan-start-animation)
-  (nyan-toggle-wavy-trail)
-  )
+  (nyan-toggle-wavy-trail))
 
 (use-package highlight-indent-guides
   :ensure t
@@ -114,10 +112,9 @@
   :ensure t
   :config
   ;; want to use Ace-window here, so delete it from the alist
-  (delete* "M-o" term-bind-key-alist :test 'equal :key 'car)
+  (cl-delete "M-o" term-bind-key-alist :test 'equal :key 'car)
   ;; No need to add-to-list, just to be clear with the new functionality :D
-  (add-to-list 'term-bind-key-alist '("M-o" . ace-window))
-  )
+  (add-to-list 'term-bind-key-alist '("M-o" . ace-window)))
 
 
 (when (version<= "26.0.50" emacs-version )
@@ -146,19 +143,18 @@
 
 (use-package org-bullets
   :ensure t
-  :hook (org-mode . (lambda () (org-bullets-mode 1)))
-  )
+  :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 
 
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((lisp . t)
-	 (C . t)
-	 (emacs-lisp . t)
-	 (latex . t)
-	 (mongo . t)
-	 (sql . t)))
+   (C . t)
+   (emacs-lisp . t)
+   (latex . t)
+   (mongo . t)
+   (sql . t)))
 (setq org-confirm-babel-evaluate nil)
 (require 'ob-js)
 
@@ -256,6 +252,12 @@
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)))
 
+(use-package persp-mode
+  :ensure persp-projectile
+  :init
+  (persp-mode)
+  :bind (("M-s" . projectile-persp-switch-project)
+	 ("C-c p" . 'persp-switch)))
 
 (use-package projectile
   :ensure t
@@ -264,12 +266,9 @@
   ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
 
-(use-package persp-mode
-  :ensure persp-projectile
-  :init
-  (persp-mode)
-  :bind (("M-s" . projectile-persp-switch-project)
-	 ("C-c p" . 'persp-switch)))
+;; (use-package persp-mode
+;;   :ensure t)
+
 
 (use-package treemacs
   :ensure t
@@ -277,7 +276,7 @@
   :init
   :bind
   (:map global-map
-	("<f8>" . treemacs-select-window))
+	("<f8>" . treemacs))
   :config
   (progn
     (setq treemacs-width 25)))
@@ -295,11 +294,15 @@
   :after treemacs magit
   :ensure t)
 
+(use-package treemacs-icons
+  :after treemacs )
+
 (use-package helm
   :ensure t
   :bind (("M-x" . helm-M-x)
 	 ("C-x C-f" . helm-find-files))
   :config
+  (setq helm-split-window-in-side-p t)
   (bind-keys :map helm-map
              ("TAB" . helm-execute-persistent-action))
   ;; (use-package helm-projectile
@@ -308,6 +311,20 @@
   ;;   (helm-projectile-on))
   (helm-autoresize-mode 1)
   (helm-mode 1))
+
+(use-package go-mode
+  :ensure t
+  :custom (gofmt-command "goimports")
+  :config
+  (add-hook 'before-save-hook #'gofmt-before-save)
+  (use-package gotest
+    :ensure t)
+  (use-package go-tag
+    :ensure t
+    :config (setq go-tag-args (list "-transform"))))
+
+(use-package elixir-mode
+  :ensure t)
 
 ;; (use-package origami
 ;;   :bind (("C-c TAB" . origami-recursively-toggle-node)
@@ -340,15 +357,15 @@
   (setq company-dabbrev-downcase 0)
   (setq company-idle-delay 0))
 
-(use-package company               
+(use-package company
   :ensure t
   :defer t
   :init (global-company-mode)
   :config
   (progn
     (setq company-tooltip-align-annotations t
-          ;; Easy navigation to candidates with M-<n>
-          company-show-numbers t)
+	  ;; Easy navigation to candidates with M-<n>
+	  company-show-numbers t)
     (setq company-dabbrev-downcase nil))
   :diminish company-mode)
 (use-package company-quickhelp          ; Documentation popups for Company
@@ -360,12 +377,18 @@
 (use-package lsp
   :ensure lsp-mode
   :commands lsp
-  :hook ((python-mode . lsp)
-	 (js2-mode . lsp))
+  :hook ((js2-mode . lsp)
+	 (go-mode . lsp))
   :config
   (setq lsp-enable-indentation nil)
   (setq lsp-prefer-flymake nil)
   (setq lsp-auto-guess-root t))
+
+(use-package lsp-python-ms
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp))))
 
 ;; (defun my-web-mode-hook ()
 ;;   (setq web-mode-markup-indent-offset 2)
@@ -374,7 +397,7 @@
 ;; )
 ;; (use-package web-mode
 ;;   :mode (("\\.html$" . web-mode)
-;; 	 ("\\.ejs$" . web-mode))
+;;	 ("\\.ejs$" . web-mode))
 ;;   :init
 ;;   (add-hook 'web-mode-hook  'my-web-mode-hook)
 ;;   )
@@ -401,6 +424,8 @@
   :mode (("\\.http$" . restclient-mode))
   )
 
+;; (setq restclient-inhibit-cookies t)
+
 (use-package editorconfig
   :ensure t
   :config
@@ -416,9 +441,14 @@
   :init
   (setq drag-stuff-mode t)
   :config
+  (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-define-keys))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 115)
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+
+(set-face-attribute 'default nil :font "Fira Code" :height 140)
 
 (when (window-system)
   (set-frame-font "Fira Code"))
@@ -451,3 +481,5 @@
   (dolist (char-regexp alist)
     (set-char-table-range composition-function-table (car char-regexp)
                           `([,(cdr char-regexp) 0 font-shape-gstring]))))
+
+
