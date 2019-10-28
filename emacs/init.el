@@ -64,6 +64,7 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 (setq-default js2-basic-offset 4)
+(setq-default js-switch-indent-offset 4)
 
 (use-package undo-tree
   :ensure t
@@ -326,6 +327,17 @@
 (use-package elixir-mode
   :ensure t)
 
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yaml\\'" "\\.yml\\'" "\\.config\\'")
+  :config
+  (setq yaml-indent-offset 4)
+  :custom-face
+  (font-lock-variable-name-face ((t (:foreground "violet")))))
+
+(use-package json-mode
+  :ensure t)
+
 ;; (use-package origami
 ;;   :bind (("C-c TAB" . origami-recursively-toggle-node)
 ;;          ("C-\\" . origami-recursively-toggle-node)
@@ -378,11 +390,18 @@
   :ensure lsp-mode
   :commands lsp
   :hook ((js2-mode . lsp)
-	 (go-mode . lsp))
+	 (go-mode . lsp)
+	 (dockerfile-mode . lsp)
+	 (yaml-mode . lsp))
   :config
   (setq lsp-enable-indentation nil)
   (setq lsp-prefer-flymake nil)
-  (setq lsp-auto-guess-root t))
+  (setq lsp-auto-guess-root t)
+  :init
+  (add-hook 'lsp-mode-hook
+            (lambda ()
+              (when (featurep 'perspective)
+                (ad-deactivate 'set-window-buffer)))))
 
 (use-package lsp-python-ms
   :ensure t
@@ -408,16 +427,7 @@
 ;;   (add-hook 'web-mode-hook 'emmet-mode)
 ;;   )
 
-(use-package yaml-mode
-  :ensure t
-  :mode ("\\.yaml\\'" "\\.yml\\'")
-  :config
-  (setq yaml-indent-offset 4)
-  :custom-face
-  (font-lock-variable-name-face ((t (:foreground "violet")))))
 
-(use-package json-mode
-  :ensure t)
 
 (use-package restclient
   :ensure t
