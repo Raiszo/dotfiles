@@ -105,7 +105,7 @@
   :ensure t
   :config
   ;; want to use Ace-window here, so delete it from the alist
-  (delete* "M-o" term-bind-key-alist :test 'equal :key 'car)
+  (cl-delete "M-o" term-bind-key-alist :test 'equal :key 'car)
   ;; No need to add-to-list, just to be clear with the new functionality :D
   (add-to-list 'term-bind-key-alist '("M-o" . ace-window)))
 
@@ -239,9 +239,9 @@
 ;;   :pin melpa-stable
 ;;   ;; when using helm-M-x emacs breaks (14% CPU)
 ;;   ;; gonna wait for WSL 2.0, maybe it helps :'v
-;;   ;; :bind (("M-x" . helm-M-x)
-;;   ;; 	 ("C-x C-f" . helm-find-files))
-;;   :bind (("C-x C-f" . helm-find-files))
+;;   :bind (("M-x" . helm-M-x)
+;;   	 ("C-x C-f" . helm-find-files))
+;;   ;; :bind (("C-x C-f" . helm-find-files))
 ;;   :config
 ;;   (bind-keys :map helm-map
 ;; 	     ("TAB" . helm-execute-persistent-action))
@@ -261,15 +261,15 @@
   ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
   ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-;; (use-package perspective
-;;   :ensure t
-;;   :config
-;;   (persp-mode))
+(use-package perspective
+  :ensure t
+  :config
+  (persp-mode))
 
-;; (use-package persp-projectile
-;;   :ensure t)
-  ;; :config
-  ;; (define-key projectile-mode-map (kbd "s-s") 'projectile-persp-switch-project))
+(use-package persp-projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "M-s") 'projectile-persp-switch-project))
 
 ;; (use-package persp-mode
 ;;   :ensure persp-projectile
@@ -457,16 +457,16 @@
   :hook
   (doom-modeline-mode . nyan-mode))
 
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :custom
-;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
-;;   (doom-modeline-icon t)
-;;   (doom-modeline-major-mode-icon t)
-;;   (doom-modeline-minor-modes nil)
-;;   :init (doom-modeline-mode 1)
-;;   :config
-;;   (set-cursor-color "cyan"))
+(use-package doom-modeline
+  :ensure t
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-minor-modes nil)
+  :init (doom-modeline-mode 1)
+  :config
+  (set-cursor-color "cyan"))
 
 (use-package dockerfile-mode
   :ensure t)
