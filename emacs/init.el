@@ -236,49 +236,81 @@
 
 (use-package helm
   :ensure t
-  ;; :pin melpa-stable
-  ;; when using helm-M-x emacs breaks (14% CPU)
-  ;; gonna wait for WSL 2.0, maybe it helps :'v
+  :init
+  (add-hook 'helm-mode-hook
+            (lambda ()
+              (setq completion-styles
+                    (cond ((assq 'helm-flex completion-styles-alist)
+                           '(helm-flex))))))
   :bind (("M-x" . helm-M-x)
-  	 ;; ("C-x b" . helm-buffers-list)
+	 ("C-x b" . helm-buffers-list)
   	 ("C-x C-f" . helm-find-files))
-  ;; :bind (("C-x C-f" . helm-find-files))
   :config
   (bind-keys :map helm-map
 	     ("TAB" . helm-execute-persistent-action))
   (setq helm-split-window-in-side-p t)
-  ;; (use-package helm-projectile
-  ;;   :ensure t
-  ;;   :config
-  ;;   (helm-projectile-on))
   (helm-autoresize-mode 1)
   (setq helm-autoresize-max-height 20)
   (helm-mode 1))
+
+;; (use-package helm-ag
+;;   :ensure t
+;;   :bind ("C-c a g" . helm-do-ag-project-root))
+
+(use-package amx
+  :ensure t
+  :after helm
+  :bind (("M-x" . amx))
+  :custom
+  (amx-history-length 50)
+  :config
+  (setq amx-backend 'helm)
+  (amx-mode 1))
+
+;; (use-package helm-posframe
+;;   :ensure t
+;;   :config
+;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
+;; 	helm-posframe-border-width 1
+;;         helm-posframe-height 20
+;;         helm-posframe-width (round (* (frame-width) 0.49))
+;;         helm-posframe-parameters '((internal-border-width . 10)))
+;;   (helm-posframe-enable))
 
 (use-package projectile
   :ensure t
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
-  ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
-  ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 (use-package perspective
   :ensure t
   :config
   (persp-mode))
 
+(use-package helm-projectile
+  :ensure t
+  :after projectile helm perspective
+  :config
+  (define-key projectile-mode-map [remap projectile-find-other-file] #'helm-projectile-find-other-file)
+  (define-key projectile-mode-map [remap projectile-find-file] #'helm-projectile-find-file)
+  (define-key projectile-mode-map [remap projectile-find-file-in-known-projects] #'helm-projectile-find-file-in-known-projects)
+  (define-key projectile-mode-map [remap projectile-find-file-dwim] #'helm-projectile-find-file-dwim)
+  (define-key projectile-mode-map [remap projectile-find-dir] #'helm-projectile-find-dir)
+  (define-key projectile-mode-map [remap projectile-recentf] #'helm-projectile-recentf)
+  (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'helm-projectile-switch-to-buffer)
+  (define-key projectile-mode-map [remap projectile-grep] #'helm-projectile-grep)
+  (define-key projectile-mode-map [remap projectile-ack] #'helm-projectile-ack)
+  (define-key projectile-mode-map [remap projectile-ag] #'helm-projectile-ag)
+  (define-key projectile-mode-map [remap projectile-ripgrep] #'helm-projectile-rg)
+  (define-key projectile-mode-map [remap projectile-browse-dirty-projects] #'helm-projectile-browse-dirty-projects)
+  (helm-projectile-commander-bindings))
+
 (use-package persp-projectile
   :ensure t
+  :after perspective
   :config
   (define-key projectile-mode-map (kbd "M-s") 'projectile-persp-switch-project))
-
-;; (use-package persp-mode
-;;   :ensure persp-projectile
-;;   :init
-;;   (persp-mode)
-;;   :bind (("M-s" . projectile-persp-switch-project)
-;; 	 ("C-c p" . 'persp-switch)))
 
 (use-package treemacs
   :ensure t
@@ -300,10 +332,6 @@
   :ensure t
   :config (treemacs-icons-dired-mode))
 
-;; (use-package treemacs-icons
-;;   :after treemacs
-;;   :ensure t)
-
 (use-package treemacs-magit
   :after treemacs magit
   :ensure t)
@@ -315,15 +343,6 @@
 ;;          ("M-+" . origami-open-all-nodes))
 ;;   :init
 ;;   (global-origami-mode))
-
-;; (use-package pipenv
-;;   :hook (python-mode . pipenv-mode)
-;;   :init
-;;   (setq
-;;    pipenv-projectile-after-switch-function
-;;    #'pipenv-projectile-after-switch-extended)
-;;   (setq pipenv-with-flycheck nil)
-;;   )
 
 ;; posframe
 ;; (use-package posframe
@@ -337,12 +356,6 @@
   (setq lsp-enable-indentation nil)
   (setq lsp-prefer-flymake nil)
   (setq lsp-auto-guess-root t))
-
-  ;; :init
-  ;; (add-hook 'lsp-mode-hook
-  ;;           (lambda ()
-  ;;             (when (featurep 'perspective)
-  ;;               (ad-deactivate 'set-window-buffer)))))
 
 (use-package lsp-ui
   :ensure t
