@@ -234,24 +234,26 @@
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)))
 
-;; (use-package helm
-;;   :ensure t
-;;   :pin melpa-stable
-;;   ;; when using helm-M-x emacs breaks (14% CPU)
-;;   ;; gonna wait for WSL 2.0, maybe it helps :'v
-;;   :bind (("M-x" . helm-M-x)
-;;   	 ("C-x C-f" . helm-find-files))
-;;   ;; :bind (("C-x C-f" . helm-find-files))
-;;   :config
-;;   (bind-keys :map helm-map
-;; 	     ("TAB" . helm-execute-persistent-action))
-;;   (setq helm-split-window-in-side-p t)
-;;   ;; (use-package helm-projectile
-;;   ;;   :ensure t
-;;   ;;   :config
-;;   ;;   (helm-projectile-on))
-;;   (helm-autoresize-mode 1)
-;;   (helm-mode 1))
+(use-package helm
+  :ensure t
+  ;; :pin melpa-stable
+  ;; when using helm-M-x emacs breaks (14% CPU)
+  ;; gonna wait for WSL 2.0, maybe it helps :'v
+  :bind (("M-x" . helm-M-x)
+  	 ;; ("C-x b" . helm-buffers-list)
+  	 ("C-x C-f" . helm-find-files))
+  ;; :bind (("C-x C-f" . helm-find-files))
+  :config
+  (bind-keys :map helm-map
+	     ("TAB" . helm-execute-persistent-action))
+  (setq helm-split-window-in-side-p t)
+  ;; (use-package helm-projectile
+  ;;   :ensure t
+  ;;   :config
+  ;;   (helm-projectile-on))
+  (helm-autoresize-mode 1)
+  (setq helm-autoresize-max-height 20)
+  (helm-mode 1))
 
 (use-package projectile
   :ensure t
@@ -371,9 +373,13 @@
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
-;; (use-package company-box
-;;   :ensure t
-;;   :hook (company-mode . company-box-mode))
+(use-package company-box
+  :ensure t
+  :hook (company-mode . company-box-mode))
+(use-package company-posframe
+  :diminish
+  :hook (company-mode . company-posframe-mode)
+  :ensure t)
 
 (use-package lsp-python-ms
   :ensure t
@@ -457,16 +463,16 @@
   :hook
   (doom-modeline-mode . nyan-mode))
 
-(use-package doom-modeline
-  :ensure t
-  :custom
-  (doom-modeline-buffer-file-name-style 'truncate-with-project)
-  (doom-modeline-icon t)
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-minor-modes nil)
-  :init (doom-modeline-mode 1)
-  :config
-  (set-cursor-color "cyan"))
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :custom
+;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
+;;   (doom-modeline-icon t)
+;;   (doom-modeline-major-mode-icon t)
+;;   (doom-modeline-minor-modes nil)
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (set-cursor-color "cyan"))
 
 (use-package dockerfile-mode
   :ensure t)
