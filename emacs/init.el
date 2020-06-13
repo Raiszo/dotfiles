@@ -508,6 +508,33 @@
 (use-package elixir-mode
   :ensure t)
 
+(use-package typescript-mode
+  :ensure t)
+
+(use-package dashboard
+  :ensure t
+  :init
+  (progn
+    (setq dashboard-items '((recents . 3)
+			    (projects . 1)))
+    (setq dashboard-center-content t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-startup-banner "~/.emacs.d/images/nerv.png")
+    )
+  :config
+  (dashboard-setup-startup-hook))
+
+(use-package vterm
+  :ensure t)
+
+(use-package multi-vterm :ensure t)
+
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1))
+
 
 (when (window-system)
   (set-frame-font "Fira Code"))
