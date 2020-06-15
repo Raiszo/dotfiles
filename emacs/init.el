@@ -336,10 +336,6 @@
 ;;   :init
 ;;   (global-origami-mode))
 
-;; posframe
-;; (use-package posframe
-;;   :ensure t)
-
 ;; LSP mode config
 (use-package flycheck
   :ensure t)
@@ -421,9 +417,6 @@
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
 
-(use-package docker-compose-mode
-  :ensure t)
-
 (use-package json-mode
   :ensure t)
 
@@ -490,6 +483,9 @@
 (use-package docker
   :ensure t
   :bind ("C-c d" . docker))
+
+(use-package docker-compose-mode
+  :ensure t)
 
 (use-package go-mode
   :ensure t
