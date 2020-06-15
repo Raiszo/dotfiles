@@ -7,30 +7,23 @@
 			 ("melpa-stable" . "http://stable.melpa.org/packages/")
 			 ("melpa" . "http://melpa.org/packages/")) )
 
-(setq package-list '(js2-mode monokai-theme farmhouse-theme darkokai-theme exec-path-from-shell use-package nginx-mode))
+(setq package-list '(monokai-theme farmhouse-theme darkokai-theme use-package nginx-mode))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-refresh-contents)
     (package-install package)))
 
+;; Correctly load $PATH and $MANPATH on OSX (GUI).
 ;; macos only stuff >:v, pice of crap
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize)
-  (setq mac-right-option-modifier 'none))
-
-;; (defun my-insert-tab-char ()
-;;	"Insert a tab char. (ASCII 9, \t)"
-;;	(interactive)
-;;	  (insert "\t"))
-;; (global-set-key [tab] 'tab-to-tab-stop) ; same as Ctrl+i
-
-
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/intento1.el")
-;;(load-theme 'monokai-theme)
-;; (add-hook 'after-init-hook (lambda () (load-theme 'darkokai)))
-;; (setq darkokai-mode-line-padding 1)
-;; (load-theme 'darkokai t)
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns))
+  :config
+  (progn
+    (setq exec-path-from-shell-arguments '("-l"))
+    (setq mac-right-option-modifier 'none) ;this is another shit for mac
+    (exec-path-from-shell-initialize)))
 
 (use-package doom-themes
   :ensure t
@@ -58,13 +51,16 @@
 (electric-indent-mode 1)
 
 ;; js2-mode
-(setq js2-strict-missing-semi-warning nil)
-(setq js2-include-node-externs t)
-
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-(setq-default js2-basic-offset 4)
+(use-package js2-mode
+  :ensure t
+  :mode "\\.js\\'"
+  :hook (js2-mode . js2-imenu-extras-mode)
+  :custom
+  (js2-strict-missing-semi-warning nil)
+  (js2-include-node-externs t)
+  (js-switch-indent-offset 4)
+  :config
+  (setq-default js2-basic-offset 4))
 
 (use-package nodejs-repl
   :ensure t)
@@ -101,13 +97,13 @@
   (setq highlight-indent-guides-method 'character)
   (highlight-indent-guides-mode 1))
 
-(use-package multi-term
-  :ensure t
-  :config
-  ;; want to use Ace-window here, so delete it from the alist
-  (cl-delete "M-o" term-bind-key-alist :test 'equal :key 'car)
-  ;; No need to add-to-list, just to be clear with the new functionality :D
-  (add-to-list 'term-bind-key-alist '("M-o" . ace-window)))
+;; (use-package multi-term
+;;   :ensure t
+;;   :config
+;;   ;; want to use Ace-window here, so delete it from the alist
+;;   (cl-delete "M-o" term-bind-key-alist :test 'equal :key 'car)
+;;   ;; No need to add-to-list, just to be clear with the new functionality :D
+;;   (add-to-list 'term-bind-key-alist '("M-o" . ace-window)))
 
 
 (when (version<= "26.0.50" emacs-version )
@@ -142,9 +138,9 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((lisp . t)
-	 (C . t)
-	 (emacs-lisp . t)
-	 (latex . t)))
+   (C . t)
+   (emacs-lisp . t)
+   (latex . t)))
 (setq org-confirm-babel-evaluate nil)
 
 ;; more space in GUI mode :D
@@ -233,6 +229,8 @@
   :ensure t
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)))
+
+;; helm stuff
 
 (use-package helm
   :ensure t
@@ -349,17 +347,37 @@
 ;;   :ensure t)
 
 ;; LSP mode config
+(use-package flycheck
+  :ensure t)
+
 (use-package lsp-mode
   :ensure t
   :commands lsp
   :config
   (setq lsp-enable-indentation nil)
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-auto-guess-root t))
+  (setq lsp-auto-guess-root t)
+  :hook ((typescript-mode . lsp)
+	 (js2-mode . lsp)))
 
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode
+  :custom
+  ;; lsp-ui-doc
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-delay 2)
+  (lsp-ui-doc-header t)
+  (lsp-ui-doc-include-signature nil)
+  (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
+  (lsp-ui-doc-max-width 120)
+  (lsp-ui-doc-max-height 30)
+  (lsp-ui-doc-use-childframe t)
+  (lsp-ui-doc-use-webkit t)
+  ;; lsp-ui-imenu
+  (lsp-ui-imenu-enable nil)
+  (lsp-ui-imenu-kind-position 'top)
+  :hook
+  (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-ignore-duplicate t)
   (setq lsp-ui-sideline-enable nil))
@@ -401,24 +419,6 @@
   			 (require 'lsp-python-ms)
   			 (lsp))))
 
-;; (defun my-web-mode-hook ()
-;;   (setq web-mode-markup-indent-offset 2)
-;;   (web-mode-use-tabs)
-;;   (setq-default tab-width 4)
-;; )
-;; (use-package web-mode
-;;   :mode (("\\.html$" . web-mode)
-;; 	 ("\\.ejs$" . web-mode))
-;;   :init
-;;   (add-hook 'web-mode-hook  'my-web-mode-hook)
-;;   )
-
-;; (use-package emmet-mode
-;;   :config
-;;   (add-hook 'sgml-mode-hook 'emmet-mode)
-;;   (add-hook 'web-mode-hook 'emmet-mode)
-;;   )
-
 (use-package yaml-mode
   :ensure t
   :mode ("\\.yaml\\'" "\\.yml\\'")
@@ -426,6 +426,9 @@
   (setq yaml-indent-offset 4)
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
+
+(use-package docker-compose-mode
+  :ensure t)
 
 (use-package json-mode
   :ensure t)
@@ -438,14 +441,18 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-(use-package restclient
-  :ensure t
-  :mode (("\\.http$" . restclient-mode)))
-
 (use-package editorconfig
   :ensure t
   :config
   (editorconfig-mode 1))
+
+(use-package restclient
+  :ensure t
+  :mode (("\\.http$" . restclient-mode)))
+
+(use-package es-mode
+  :ensure t
+  :mode (("\\.es$" . es-mode)))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -461,20 +468,15 @@
 
 (set-face-attribute 'default nil :font "Fira Code" :height 100)
 
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :custom
-;;   (doom-modeline-minor-modes nil)
-;;   :init (doom-modeline-mode 1))
-
 (use-package nyan-mode
   :ensure t
   :config
   (nyan-mode 1)
   (nyan-start-animation)
-  (nyan-toggle-wavy-trail)
-  :hook
-  (doom-modeline-mode . nyan-mode))
+  (nyan-toggle-wavy-trail))
+  ;; (nyan-toggle-wavy-trail)
+  ;; :hook
+  ;; (doom-modeline-mode . nyan-mode))
 
 ;; (use-package doom-modeline
 ;;   :ensure t
@@ -482,7 +484,8 @@
 ;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
 ;;   (doom-modeline-icon t)
 ;;   (doom-modeline-major-mode-icon t)
-;;   (doom-modeline-minor-modes nil)
+;;   (doom-modeline-minor-modes nil);
+;;   (inhibit-compacting-font-caches t)
 ;;   :init (doom-modeline-mode 1)
 ;;   :config
 ;;   (set-cursor-color "cyan"))
@@ -528,12 +531,13 @@
 (use-package vterm
   :ensure t)
 
-(use-package multi-vterm :ensure t)
+(use-package multi-vterm
+  :after vterm
+  :ensure t)
 
 (use-package beacon
   :ensure t
-  :config
-  (beacon-mode 1))
+  :hook (prog-mode . beacon-mode))
 
 
 (when (window-system)
