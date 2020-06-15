@@ -149,12 +149,6 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; (defun on-after-init ()
-;;  (unless (display-graphic-p (selected-frame))
-;;    (set-face-background 'default "unspecified-bg" (selected-frame))))
-
-;; (add-hook 'window-setup-hook 'on-after-init)
-
 ;; (setq org-src-window-setup 'current-window)
 (require 'org)
 (add-to-list 'org-src-lang-modes '("js" . js2))
