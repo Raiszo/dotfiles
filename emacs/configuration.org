@@ -40,16 +40,6 @@
        (exec-path-from-shell-initialize)))
 #+end_src
 
-** Emacs version
-#+begin_src emacs-lisp
-  (when (version<= "26.0.50" emacs-version )
-    (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-    (set-face-attribute 'line-number-current-line nil
-			:background "#7fffd4"
-			:foreground "black"
-			:weight 'bold))
-#+end_src
-
 * Appereance
 
 ** Transparent background
@@ -65,6 +55,16 @@
   (add-to-list 'default-frame-alist '(alpha 85 85))
 #+end_src
 
+** Disable default emacs appereance
+   More space in GUI mode :3
+#+begin_src emacs-lisp
+  ;; more space in GUI mode :D
+  (setq inhibit-startup-screen t)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
 ** Theme
 #+begin_src emacs-lisp
   (use-package doom-themes
@@ -77,6 +77,66 @@
     (progn
       ;; (doom-themes-treemacs-config)
       (doom-themes-org-config)))
+#+end_src
+
+** Font
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil :font "Fira Code" :height 100)
+
+  (when (window-system)
+    (set-frame-font "Fira Code"))
+  (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+		 (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+		 (36 . ".\\(?:>\\)")
+		 (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+		 (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+		 (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+		 (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+		 (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+		 (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+		 (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+		 (48 . ".\\(?:x[a-zA-Z]\\)")
+		 (58 . ".\\(?:::\\|[:=]\\)")
+		 (59 . ".\\(?:;;\\|;\\)")
+		 (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+		 (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+		 (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+		 (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+		 (91 . ".\\(?:]\\)")
+		 (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+		 (94 . ".\\(?:=\\)")
+		 (119 . ".\\(?:ww\\)")
+		 (123 . ".\\(?:-\\)")
+		 (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+		 (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+		 )
+	       ))
+    (dolist (char-regexp alist)
+      (set-char-table-range composition-function-table (car char-regexp)
+			    `([,(cdr char-regexp) 0 font-shape-gstring]))))
+#+end_src
+
+** Line number
+#+begin_src emacs-lisp
+  (use-package display-line-numbers
+    :ensure nil
+    :config
+    (set-face-attribute 'line-number-current-line nil
+			:background "#7fffd4"
+			:foreground "black"
+			:weight 'bold)
+    :hook
+    ((prog-mode yaml-mode systemd-mode) . display-line-numbers-mode))
+#+end_src
+
+** Indentation guides
+#+begin_src emacs-lisp
+(use-package highlight-indent-guides
+  :ensure t
+  :hook ((prog-mode yaml-mode) . highlight-indent-guides-mode)
+  :config
+  (setq highlight-indent-guides-method 'character)
+  (highlight-indent-guides-mode 1))
 #+end_src
 
 ** nyan
@@ -155,16 +215,6 @@
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Indentation guides
-#+begin_src emacs-lisp
-(use-package highlight-indent-guides
-  :ensure t
-  :hook ((prog-mode yaml-mode) . highlight-indent-guides-mode)
-  :config
-  (setq highlight-indent-guides-method 'character)
-  (highlight-indent-guides-mode 1))
-#+end_src
-
 ** rainbow-delimiters
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
@@ -173,51 +223,31 @@
 	 (emacs-lisp-mode . rainbow-delimiters-mode)))
 #+end_src
 
-** Disable default emacs appereance
-   More space in GUI mode :3
+** rainbow-mode
 #+begin_src emacs-lisp
-  ;; more space in GUI mode :D
-  (setq inhibit-startup-screen t)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+  ;; (use-package rainbow-mode
+  ;;   :diminish
+  ;;   :hook (emacs-lisp-mode . rainbow-mode))
 #+end_src
 
-** Font
+** dimmer
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil :font "Fira Code" :height 135)
-
-  (when (window-system)
-    (set-frame-font "Fira Code"))
-  (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
-		 (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
-		 (36 . ".\\(?:>\\)")
-		 (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
-		 (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
-		 (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
-		 (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
-		 (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
-		 (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
-		 (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
-		 (48 . ".\\(?:x[a-zA-Z]\\)")
-		 (58 . ".\\(?:::\\|[:=]\\)")
-		 (59 . ".\\(?:;;\\|;\\)")
-		 (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
-		 (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
-		 (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
-		 (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
-		 (91 . ".\\(?:]\\)")
-		 (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
-		 (94 . ".\\(?:=\\)")
-		 (119 . ".\\(?:ww\\)")
-		 (123 . ".\\(?:-\\)")
-		 (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
-		 (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
-		 )
-	       ))
-    (dolist (char-regexp alist)
-      (set-char-table-range composition-function-table (car char-regexp)
-			    `([,(cdr char-regexp) 0 font-shape-gstring]))))
+  (use-package dimmer
+    :ensure t
+    :disabled
+    :custom
+    (dimmer-fraction 0.5)
+    (dimmer-exclusion-regexp-list
+     '(".*Minibuf.*"
+       ".*which-key.*"
+       ".*Treemacs.*"
+       ".*Messages.*"
+       ".*Async.*"
+       ".*Warnings.*"
+       ".*LV.*"
+       ".*Ilist.*"))
+    :config
+    (dimmer-mode t))
 #+end_src
 
 * General stuff
@@ -260,6 +290,8 @@
 
 (use-package beacon
   :ensure t
+  :custom
+  (beacon-color "#f1fa8c")
   :hook (prog-mode . beacon-mode))
 #+end_src
 
