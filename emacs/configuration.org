@@ -108,6 +108,35 @@
 ;;   (set-cursor-color "cyan"))
 #+end_src
 
+** telephone-line *deprecated*
+#+begin_src emacs-lisp
+;; (use-package telephone-line
+;;   :ensure t
+;;   :config
+;;   (defface my-indianRed '((t (:foreground "white" :background "IndianRed1"))) "")
+;;   (defface my-gold '((t (:foreground "black" :background "gold"))) "")
+;;   (setq telephone-line-faces
+;; 	'((indianGold . (my-gold . my-indianRed))
+;; 	  (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+;; 	  (nil . (mode-line . mode-line-inactive))))
+;;   (setq telephone-line-lhs
+;; 	'((indianGold . (telephone-line-vc-segment
+;; 			 telephone-line-erc-modified-channels-segment
+;; 			 telephone-line-process-segment))
+;; 	  (nil . (telephone-line-major-mode-segment
+;; 		  telephone-line-buffer-segment))
+;; 	  ;; when splitting the window it gets trimmed to 1 ;'v
+;; 	  ;; refer to this issue https://github.com/dbordak/telephone-line/issues/41
+;; 	  (nil . (telephone-line-nyan-segment))
+;; 	  ))
+;;   (setq telephone-line-rhs
+;; 	'((nil . (telephone-line-misc-info-segment))
+;; 	  (accent . (telephone-line-minor-mode-segment))
+;; 	  (indianGold . (telephone-line-airline-position-segment))
+;; 	  ))
+;;   (telephone-line-mode 1))
+#+end_src
+
 ** Dashboard
    Kul dashboard with a custom image: eva <3
 #+begin_src emacs-lisp
@@ -288,6 +317,16 @@
   (helm-autoresize-mode 1)
   (setq helm-autoresize-max-height 20)
   (helm-mode 1))
+
+;; (use-package helm-posframe
+;;   :ensure t
+;;   :config
+;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
+;; 	helm-posframe-border-width 1
+;;         helm-posframe-height 20
+;;         helm-posframe-width (round (* (frame-width) 0.49))
+;;         helm-posframe-parameters '((internal-border-width . 10)))
+;;   (helm-posframe-enable))
 #+end_src
 
 ** amx
