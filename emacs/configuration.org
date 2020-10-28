@@ -2,6 +2,12 @@
 #+Author: Raiszo
 
 * Declare repositories
+  Small trick that was needed long ago for repositories on wsl to work correctly
+#+begin_src emacs-lisp
+(setq package-check-signature nil)
+#+end_src
+
+
 #+begin_src emacs-lisp
   (require 'package)
   ;;Add melpa repository
@@ -53,6 +59,10 @@
       (set-face-background 'default "unspecified-bg" (selected-frame))))
 
   (add-hook 'window-setup-hook 'on-after-init)
+
+  ;; Setting transparency, not working like urxvt
+  (set-frame-parameter (selected-frame) 'alpha '(85 85))
+  (add-to-list 'default-frame-alist '(alpha 85 85))
 #+end_src
 
 ** Theme
@@ -124,6 +134,14 @@
   :config
   (setq highlight-indent-guides-method 'character)
   (highlight-indent-guides-mode 1))
+#+end_src
+
+** rainbow-delimiters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :hook ((python-mode . rainbow-delimiters-mode)
+	 (emacs-lisp-mode . rainbow-delimiters-mode)))
 #+end_src
 
 ** Disable default emacs appereance
