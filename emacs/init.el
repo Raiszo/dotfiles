@@ -7,7 +7,7 @@
 			 ("melpa-stable" . "http://stable.melpa.org/packages/")
 			 ("melpa" . "http://melpa.org/packages/")) )
 
-(setq package-list '(monokai-theme farmhouse-theme darkokai-theme use-package nginx-mode))
+(setq package-list '(use-package))
 
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -128,7 +128,8 @@
   :config
   (yas-load-directory "~/.emacs.d/snippets")
   (yas-reload-all)
-  (add-hook 'js2-mode-hook #'yas-minor-mode))
+  (add-hook 'js2-mode-hook #'yas-minor-mode)
+  (add-hook 'typescript-mode-hook #'yas-minor-mode))
 
 (use-package org-bullets
   :ensure t
@@ -172,10 +173,6 @@
     (emojify-set-emoji-data))
   (emojify-mode-line-mode 1))
 
-;; Use DejaVu Sans Mono Nerd Font
-
-;; (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font Mono")
-;; (set-face-attribute 'default nil :height 135)
 
 (use-package expand-region
   :ensure t
@@ -302,7 +299,7 @@
   :ensure t
   :after perspective
   :config
-  (define-key projectile-mode-map (kbd "M-s") 'projectile-persp-switch-project))
+  (define-key projectile-mode-map (kbd "C-c p p") 'projectile-persp-switch-project))
 
 (use-package treemacs
   :ensure t
@@ -345,9 +342,9 @@
   :commands lsp
   :config
   (setq lsp-enable-indentation nil)
-  (setq lsp-auto-guess-root t)
+  (setq lsp-signature-auto-activate nil)
   :hook ((typescript-mode . lsp)
-	 (js2-mode . lsp)))
+	 (dockerfile-mode . lsp)))
 
 (use-package lsp-ui
   :ensure t
@@ -390,7 +387,7 @@
 (use-package company-quickhelp          ; Documentation popups for Company
   :ensure t
   :defer t
-  :init (add-hook 'global-company-mode-hook #'company-quickhelp-mode))
+  :hook (global-company-mode . company-quickhelp-mode))
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
@@ -417,6 +414,9 @@
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
 
+(use-package nginx-mode
+  :ensure t)
+
 (use-package json-mode
   :ensure t)
 
@@ -433,8 +433,29 @@
   :config
   (editorconfig-mode 1))
 
+(use-package edit-indirect
+  :ensure t)
+
 (use-package restclient
   :ensure t
+  :after edit-indirect
+  :config
+  (defun my-restclient-indirect-edit ()
+    "Use `edit-indirect-region' to edit the request body in a
+separate buffer."
+    (interactive)
+    (save-excursion
+      (goto-char (restclient-current-min))
+      (when (re-search-forward restclient-method-url-regexp (point-max) t)
+	(forward-line)
+	(while (cond
+		((and (looking-at restclient-header-regexp) (not (looking-at restclient-empty-line-regexp))))
+		((looking-at restclient-use-var-regexp)))
+	  (forward-line))
+	(when (looking-at restclient-empty-line-regexp)
+	  (forward-line))
+	(edit-indirect-region (min (point) (restclient-current-max)) (restclient-current-max) t))))
+  :bind ("C-c '" . my-restclient-indirect-edit)
   :mode (("\\.http$" . restclient-mode)))
 
 (use-package es-mode
@@ -453,7 +474,7 @@
   :config
   (drag-stuff-define-keys))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 100)
+(set-face-attribute 'default nil :font "Fira Code" :height 135)
 
 (use-package nyan-mode
   :ensure t
@@ -471,7 +492,7 @@
 ;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
 ;;   (doom-modeline-icon t)
 ;;   (doom-modeline-major-mode-icon t)
-;;   (doom-modeline-minor-modes nil);
+;;   (doom-modeline-minor-modes nil)
 ;;   (inhibit-compacting-font-caches t)
 ;;   :init (doom-modeline-mode 1)
 ;;   :config
@@ -509,7 +530,7 @@
   :init
   (progn
     (setq dashboard-items '((recents . 3)
-			    (projects . 1)))
+			    (projects . 3)))
     (setq dashboard-center-content t)
     (setq dashboard-set-file-icons t)
     (setq dashboard-set-heading-icons t)
