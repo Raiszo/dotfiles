@@ -267,13 +267,12 @@
 
 ** Snippets
 #+begin_src emacs-lisp
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-load-directory "~/.emacs.d/snippets")
-  (yas-reload-all)
-  (add-hook 'js2-mode-hook #'yas-minor-mode)
-  (add-hook 'typescript-mode-hook #'yas-minor-mode))
+  (use-package yasnippet
+    :ensure t
+    :hook (prog-mode . yas-minor-mode)
+    :config
+    (yas-load-directory "~/.emacs.d/snippets")
+    (yas-reload-all))
 #+end_src
 
 ** expand-region
