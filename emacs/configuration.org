@@ -139,33 +139,32 @@
   (highlight-indent-guides-mode 1))
 #+end_src
 
-** nyan
-#+begin_src emacs-lisp
-(use-package nyan-mode
-  :ensure t
-  :config
-  (nyan-mode 1)
-  (nyan-start-animation)
-  (nyan-toggle-wavy-trail))
-  ;; (nyan-toggle-wavy-trail)
-  ;; :hook
-  ;; (doom-modeline-mode . nyan-mode))
-#+end_src
-
 ** doom-modeline
    not used coz a weid bug with helm that takes the cpu to 100% when opening a helm buffer, sadge
 #+begin_src emacs-lisp
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :custom
-;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
-;;   (doom-modeline-icon t)
-;;   (doom-modeline-major-mode-icon t)
-;;   (doom-modeline-minor-modes nil);
-;;   (inhibit-compacting-font-caches t)
-;;   :init (doom-modeline-mode 1)
-;;   :config
-;;   (set-cursor-color "cyan"))
+  (use-package doom-modeline
+    :ensure t
+    :custom
+    (doom-modeline-buffer-file-name-style 'truncate-with-project)
+    (doom-modeline-icon t)
+    (doom-modeline-major-mode-icon t)
+    (doom-modeline-minor-modes nil);
+    (inhibit-compacting-font-caches t)
+    :init (doom-modeline-mode 1)
+    :config
+    (set-cursor-color "cyan"))
+#+end_src
+
+** nyan
+#+begin_src emacs-lisp
+  (use-package nyan-mode
+    :ensure t
+    :config
+    (nyan-mode 1)
+    (nyan-start-animation)
+    (nyan-toggle-wavy-trail)
+    :hook
+    (doom-modeline-mode . nyan-mode))
 #+end_src
 
 ** telephone-line *deprecated*
@@ -331,34 +330,38 @@
 
 ** helm
 #+begin_src emacs-lisp
-(use-package helm
-  :ensure t
-  :init
-  (add-hook 'helm-mode-hook
-            (lambda ()
-              (setq completion-styles
-                    (cond ((assq 'helm-flex completion-styles-alist)
-                           '(helm-flex))))))
-  :bind (("M-x" . helm-M-x)
-	 ("C-x b" . helm-buffers-list)
-  	 ("C-x C-f" . helm-find-files))
-  :config
-  (bind-keys :map helm-map
-	     ("TAB" . helm-execute-persistent-action))
-  (setq helm-split-window-in-side-p t)
-  (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 20)
-  (helm-mode 1))
+  (use-package helm
+    :ensure t
+    :init
+    (add-hook 'helm-mode-hook
+	      (lambda ()
+		(setq completion-styles
+		      (cond ((assq 'helm-flex completion-styles-alist)
+			     '(helm-flex))))))
+    ;; https://github.com/tonsky/FiraCode/issues/158
+    (add-hook 'helm-major-mode-hook
+	      (lambda ()
+		(setq auto-composition-mode nil)))
+    :bind (("M-x" . helm-M-x)
+	   ("C-x b" . helm-buffers-list)
+	   ("C-x C-f" . helm-find-files))
+    :config
+    (bind-keys :map helm-map
+	       ("TAB" . helm-execute-persistent-action))
+    (setq helm-split-window-in-side-p t)
+    (helm-autoresize-mode 1)
+    (setq helm-autoresize-max-height 20)
+    (helm-mode 1))
 
-;; (use-package helm-posframe
-;;   :ensure t
-;;   :config
-;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
-;; 	helm-posframe-border-width 1
-;;         helm-posframe-height 20
-;;         helm-posframe-width (round (* (frame-width) 0.49))
-;;         helm-posframe-parameters '((internal-border-width . 10)))
-;;   (helm-posframe-enable))
+  ;; (use-package helm-posframe
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
+  ;; 	helm-posframe-border-width 1
+  ;;         helm-posframe-height 20
+  ;;         helm-posframe-width (round (* (frame-width) 0.49))
+  ;;         helm-posframe-parameters '((internal-border-width . 10)))
+  ;;   (helm-posframe-enable))
 #+end_src
 
 ** amx
