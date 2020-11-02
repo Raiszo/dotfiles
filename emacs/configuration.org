@@ -81,7 +81,10 @@
 
 ** Font
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil :font "Fira Code" :height 100)
+  (set-face-attribute 'default nil :family "Fira Code" :height 115)
+  (custom-set-faces
+   '(font-lock-function-name-face ((t (:inherit default :slant italic :font "FiraCodeiScript")))))
+#+end_src
 
   (when (window-system)
     (set-frame-font "Fira Code"))
@@ -150,7 +153,8 @@
     (doom-modeline-major-mode-icon t)
     (doom-modeline-minor-modes nil);
     (inhibit-compacting-font-caches t)
-    :init (doom-modeline-mode 1)
+    :init
+    (doom-modeline-mode 1)
     :config
     (set-cursor-color "cyan"))
 #+end_src
@@ -494,71 +498,72 @@
 * LSP
 
 #+begin_src emacs-lisp
-;; LSP mode config
-(use-package flycheck
-  :ensure t)
+    ;; LSP mode config
+    (use-package flycheck
+      :ensure t)
 
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :config
-  (setq lsp-enable-indentation nil)
-  (setq lsp-signature-auto-activate nil)
-  :hook ((typescript-mode . lsp)
-	 (dockerfile-mode . lsp)))
+    (use-package lsp-mode
+      :ensure t
+      :commands lsp
+      :config
+      (setq lsp-enable-indentation nil)
+      (setq lsp-signature-auto-activate nil)
+      :hook ((typescript-mode . lsp)
+	     (dockerfile-mode . lsp)
+	     (emacs-lisp-mode . lsp)))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode
-  :custom
-  ;; lsp-ui-doc
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-doc-delay 2)
-  (lsp-ui-doc-header t)
-  (lsp-ui-doc-include-signature nil)
-  (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
-  (lsp-ui-doc-max-width 120)
-  (lsp-ui-doc-max-height 30)
-  (lsp-ui-doc-use-childframe t)
-  (lsp-ui-doc-use-webkit t)
-  ;; lsp-ui-imenu
-  (lsp-ui-imenu-enable nil)
-  (lsp-ui-imenu-kind-position 'top)
-  :hook
-  (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-ignore-duplicate t)
-  (setq lsp-ui-sideline-enable nil))
+    (use-package lsp-ui
+      :ensure t
+      :commands lsp-ui-mode
+      :custom
+      ;; lsp-ui-doc
+      (lsp-ui-doc-enable nil)
+      (lsp-ui-doc-delay 2)
+      (lsp-ui-doc-header t)
+      (lsp-ui-doc-include-signature nil)
+      (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
+      (lsp-ui-doc-max-width 120)
+      (lsp-ui-doc-max-height 30)
+      (lsp-ui-doc-use-childframe t)
+      (lsp-ui-doc-use-webkit t)
+      ;; lsp-ui-imenu
+      (lsp-ui-imenu-enable nil)
+      (lsp-ui-imenu-kind-position 'top)
+      :hook
+      (lsp-mode . lsp-ui-mode)
+      :config
+      (setq lsp-ui-sideline-ignore-duplicate t)
+      (setq lsp-ui-sideline-enable nil))
 
-(use-package company
-  :ensure t
-  :defer t
-  :init (global-company-mode)
-  :config
-  (progn
-    (setq company-tooltip-align-annotations t
-          ;; Easy navigation to candidates with M-<n>
-          company-show-numbers t)
-    (setq company-dabbrev-downcase nil))
-  :custom
-  (company-idle-delay 0)
-  (company-echo-delay 0)
-  (company-minimum-prefix-length 1)
-  :diminish company-mode)
-(use-package company-quickhelp          ; Documentation popups for Company
-  :ensure t
-  :defer t
-  :hook (global-company-mode . company-quickhelp-mode))
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
-(use-package company-box
-  :ensure t
-  :hook (company-mode . company-box-mode))
-(use-package company-posframe
-  :diminish
-  :ensure t
-  :hook (company-mode . company-posframe-mode))
+    (use-package company
+      :ensure t
+      :defer t
+      :init (global-company-mode)
+      :config
+      (progn
+	(setq company-tooltip-align-annotations t
+	      ;; Easy navigation to candidates with M-<n>
+	      company-show-numbers t)
+	(setq company-dabbrev-downcase nil))
+      :custom
+      (company-idle-delay 0)
+      (company-echo-delay 0)
+      (company-minimum-prefix-length 1)
+      :diminish company-mode)
+    (use-package company-quickhelp          ; Documentation popups for Company
+      :ensure t
+      :defer t
+      :hook (global-company-mode . company-quickhelp-mode))
+    (use-package company-lsp
+      :ensure t
+      :commands company-lsp)
+    (use-package company-box
+      :ensure t
+      :hook (company-mode . company-box-mode))
+    (use-package company-posframe
+      :diminish
+      :ensure t
+      :hook (company-mode . company-posframe-mode))
 #+end_src
 
 * Languages
@@ -714,11 +719,11 @@ separate buffer."
 
 ** code blocks appereance
 #+begin_src emacs-lisp
-(require 'org)
-(add-to-list 'org-src-lang-modes '("js" . js2))
-(set-face-attribute 'org-meta-line nil :background "black" :foreground "pink")
-(set-face-attribute 'org-block-begin-line nil :background "black" :foreground "green")
-(set-face-attribute 'org-block-end-line nil :background "black" :foreground "green")
+  (require 'org)
+  (add-to-list 'org-src-lang-modes '("js" . js2))
+  ;; (set-face-attribute 'org-meta-line nil :background "black" :foreground "pink")
+  ;; (set-face-attribute 'org-block-begin-line nil :background "black" :foreground "green")
+  ;; (set-face-attribute 'org-block-end-line nil :background "black" :foreground "green")
 #+end_src
 
 ** Bullets
