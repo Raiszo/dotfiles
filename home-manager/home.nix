@@ -1,5 +1,19 @@
 { config, pkgs, lib, ... }:
 
+let
+  myZshThemeSrc = pkgs.applyPatches{
+    src = pkgs.fetchFromGitHub {
+      owner = "dvigo";
+      repo = "modern-dark-pro-capsule-ohmyzsh";
+      rev = "main";
+      sha256 = "sha256-jRK3tMh0Y+eADjImQymkrosprNJOaCx6k9DUwIGYwDY=";
+    };
+
+    patches = [
+      ./patches/fix-int-casting-elapsed-time.patch
+    ];
+  };
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -121,12 +135,7 @@
       {
         name = "modern-dark-pro-capsule";
         file = "modern-dark-pro-capsule.zsh-theme";
-        src = pkgs.fetchFromGitHub {
-          owner = "dvigo";
-          repo = "modern-dark-pro-capsule-ohmyzsh";
-          rev = "main";
-          sha256 = "sha256-jRK3tMh0Y+eADjImQymkrosprNJOaCx6k9DUwIGYwDY=";
-        };
+	src = myZshThemeSrc;
       }
     ];
     sessionVariables = {
