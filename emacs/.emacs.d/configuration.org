@@ -1037,7 +1037,7 @@ There is also rustic available, but I want to use it when I feel like I need its
   :ensure t
   :after lsp-mode
   :config
-  (setq lsp-sourcekit-executable "~/.local/share/swiftly/toolchains/6.0.1/usr/bin/sourcekit-lsp"))
+  (setq lsp-sourcekit-executable "~/.local/share/swiftly/toolchains/6.3.3/usr/bin/sourcekit-lsp"))
 #+end_src
 ** cmake
 #+begin_src emacs-lisp
