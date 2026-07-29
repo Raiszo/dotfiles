@@ -46,10 +46,8 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 * vanilla config
 ** backups
 #+begin_src emacs-lisp
-
 ;; (setq backup-directory-alist `(("." . "~/backups/emacs-saves")))
 (setq backup-by-copying t)
-
 #+end_src
 * Appereance
 ** Transparent background
@@ -101,20 +99,6 @@ More space in GUI mode :3
             ('dark (load-theme 'ef-day t))))
 
         (add-hook 'ns-system-appearance-change-functions #'my/apply-theme))
-#+end_src
-*** COMMENT doom themes
-#+begin_src emacs-lisp
-(use-package doom-themes
-  :ensure t
-  :init
-  ;; (load-theme 'doom-solarized-light t)
-  ;; (load-theme 'doom-dracula t)
-  (setq doom-themes-enable-bold t)
-  (setq doom-themes-enable-italic t)
-  :config
-  (progn
-    ;; (doom-themes-treemacs-config)
-    (doom-themes-org-config)))
     (load-theme 'ef-summer t)))
 #+end_src
 ** Font
@@ -253,37 +237,7 @@ Specifying a ~:height~ relative to the default fixes it.
   (set-cursor-color "cyan"))
 #+end_src
 
-** COMMENT telephone-line
-#+begin_src emacs-lisp
-(use-package telephone-line
-  :ensure t
-  :config
-  (defface my-indianRed '((t (:foreground "white" :background "IndianRed1"))) "")
-  (defface my-gold '((t (:foreground "black" :background "gold"))) "")
-  (setq telephone-line-faces
-	'((indianGold . (my-gold . my-indianRed))
-	  (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
-	  (nil . (mode-line . mode-line-inactive))))
-  (setq telephone-line-lhs
-	'((indianGold . (telephone-line-vc-segment
-			 telephone-line-erc-modified-channels-segment
-			 telephone-line-process-segment))
-	  (nil . (telephone-line-major-mode-segment
-		  telephone-line-buffer-segment))
-	  ;; when splitting the window it gets trimmed to 1 ;'v
-	  ;; refer to this issue https://github.com/dbordak/telephone-line/issues/41
-	  (nil . (telephone-line-nyan-segment))
-	  ))
-  (setq telephone-line-rhs
-	'((nil . (telephone-line-misc-info-segment))
-	  (accent . (telephone-line-minor-mode-segment))
-	  (indianGold . (telephone-line-airline-position-segment))
-	  ))
-  (telephone-line-mode 1))
-#+end_src
-
 ** Dashboard
-Kul dashboard with a custom image: eva <3
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
@@ -308,11 +262,11 @@ Kul dashboard with a custom image: eva <3
 	 (emacs-lisp-mode . rainbow-delimiters-mode)))
 #+end_src
 
-** rainbow-mode
+** COMMENT rainbow-mode
 #+begin_src emacs-lisp
-  ;; (use-package rainbow-mode
-  ;;   :diminish
-  ;;   :hook (emacs-lisp-mode . rainbow-mode))
+  (use-package rainbow-mode
+    :diminish
+    :hook (emacs-lisp-mode . rainbow-mode))
 #+end_src
 
 ** COMMENT dimmer
@@ -419,7 +373,7 @@ The solution to not have problems when using package from html modes is here htt
 #+end_src
 
 * Programming utilities
-** Snippets
+** COMMENT Snippets
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
@@ -892,7 +846,7 @@ This mode supports multiple "languages" when there is no native mode for them.
   (add-to-list 'lsp-language-id-configuration '(astro-ts-mode . "astro")))
 #+end_src
 
-*** vue
+*** COMMENT vue
 When a =.vue= file is opened in a project vue-semantic-server is used for all files, which breaks development for =astro= projects and other ones that would have Vue in them
 
 #+begin_src emacs-lisp
@@ -1104,7 +1058,7 @@ channel."
   (org-table ((t (:inherit (shadow fixed-pitch))))))
 #+end_src
 
-** org babel packages
+** COMMENT org babel packages
 #+begin_src emacs-lisp
 (use-package ob-restclient
   :ensure t)
@@ -1115,7 +1069,7 @@ channel."
   (ob-mongo:default-port "27017")
   (ob-mongo:default-mongo-executable "mongosh"))
 #+end_src
-** org babel config
+** COMMENT org babel config
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1128,7 +1082,7 @@ channel."
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-window-setup 'other-window)
 #+end_src
-*** COMMENT org-roam
+*** org-roam
 To have project specific roam notes declare a local variable as suggested [[https://www.orgroam.com/manual.html#How-do-I-have-more-than-one-Org_002droam-directory_003f][here]].
 #+begin_src emacs-lisp
 (use-package org-roam
@@ -1143,7 +1097,7 @@ To have project specific roam notes declare a local variable as suggested [[http
            (file+head "${citekey}.org" "#+title: ${title}\n")
            :unnarrowed t))))
 #+end_src
-** Presentation
+** COMMENT Presentation
 #+begin_src emacs-lisp
 (defun my/org-present-start ()
   ;; Tweak font sizes
@@ -1199,7 +1153,7 @@ To have project specific roam notes declare a local variable as suggested [[http
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
 #+end_src
 
-** Exports
+** COMMENT Exports
 *** org-reveal for presentations
 #+begin_src emacs-lisp
 (use-package ox-reveal
