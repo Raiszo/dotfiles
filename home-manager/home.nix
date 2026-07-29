@@ -113,9 +113,25 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    plugins = [
+      {
+        name = "modern-dark-pro-capsule";
+        file = "modern-dark-pro-capsule.zsh-theme";
+        src = pkgs.fetchFromGitHub {
+          owner = "dvigo";
+          repo = "modern-dark-pro-capsule-ohmyzsh";
+          rev = "main";
+          sha256 = "sha256-jRK3tMh0Y+eADjImQymkrosprNJOaCx6k9DUwIGYwDY=";
+        };
+      }
+    ];
+    sessionVariables = {
+       MODERN_DARK_PRO_SHOW_CLOCK = "false";
+       MODERN_DARK_PRO_PILL_STYLE = "round";
+    };
     oh-my-zsh = {
       enable = true;
-      # theme = "oxide";
+      # theme = "ultima";
     };
   };
 }
