@@ -6,6 +6,8 @@
   home.username = "raiszo";
   home.homeDirectory = "/home/raiszo";
 
+  targets.genericLinux.enable = true;
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -106,5 +108,14 @@
         grammars.tree-sitter-org
       ]))
     ];
+  };
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    oh-my-zsh = {
+      enable = true;
+      # theme = "oxide";
+    };
   };
 }
