@@ -25,6 +25,21 @@ Only darwin and gnu/linux are supported
 (defun raiszo/my-system-type-is-darwin ()
   "Return true if system is darwin-based (Mac OS X)"
   (eq system-type 'darwin))
+
+;; check if linux on WSL, copied from
+;; https://www.reddit.com/r/emacs/comments/1e9dmb3/comment/ledyp2j/
+(defun wslp ()
+  "Return t if Emacs is running in WSL2, nil otherwise."
+  (and
+   ;; Check if the system is Linux
+   (eq system-type 'gnu/linux)
+   ;; I have a different file, the other conditions should be enough
+   ;; ;; Check for WSL-specific file
+   ;; (file-exists-p "/proc/sys/fs/binfmt_misc/WSLInterop")
+   ;; Check for WSL2-specific file
+   (file-exists-p "/run/WSL")
+   ;; Additional check: look for Windows-style root directory
+   (file-directory-p "/mnt/c")))
 #+end_src
 ** darwin path $PATH loading
 Correctly load $PATH and $MANPATH on OSX (GUI)
@@ -39,6 +54,17 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
     (exec-path-from-shell-copy-env "LSP_USE_PLISTS")
     (exec-path-from-shell-initialize)))
 #+end_src
+** WSL copy and paste bug
+#+begin_src emacs-lisp
+(when (wslp)
+  ; WSLg breaks copy-paste from Emacs into Windows
+  ; see: https://www.lukas-barth.net/blog/emacs-wsl-copy-clipboard/
+  (setq select-active-regions nil
+        select-enable-clipboard 't
+        select-enable-primary nil
+        interprogram-cut-function #'gui-select-text))
+#+end_src
+
 ** Disable s-t kbd on macos
 #+begin_src emacs-lisp
 (global-set-key (kbd "s-t") nil)
