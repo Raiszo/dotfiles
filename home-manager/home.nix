@@ -130,6 +130,7 @@
     sessionVariables = {
        MODERN_DARK_PRO_SHOW_CLOCK = "false";
        MODERN_DARK_PRO_PILL_STYLE = "round";
+       LSP_USE_PLISTS = "true";
     };
     oh-my-zsh = {
       enable = true;
