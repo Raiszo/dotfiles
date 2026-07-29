@@ -59,6 +59,8 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+
+    ".tmux.conf".source = tmux/tmux.conf;
   };
 
   xdg.configFile."nix" = {
