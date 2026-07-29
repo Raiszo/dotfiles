@@ -774,6 +774,12 @@ Built in tree sitter is prefered
 (use-package prettier
   :ensure t)
 #+end_src
+** nix
+#+begin_src emacs-lisp
+(use-package nix-ts-mode
+  :ensure t
+  :mode "\\.nix\\'")
+#+end_src
 ** COMMENT typescript
 #+begin_src emacs-lisp
 (defun my-typescript-ts-mode--indent-rules (language)
