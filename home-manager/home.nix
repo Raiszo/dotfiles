@@ -17,7 +17,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -27,6 +27,14 @@
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
     # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+
+    cascadia-code
+    awscli2
+    fnm
+    gnumake
+    jq
+    tree
+    ripgrep
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -51,9 +59,12 @@
     # '';
   };
 
-  xdg.configFile."nix".text = ''
-    experimental-features = nix-command flakes
-  '';
+  xdg.configFile."nix" = {
+    text = ''
+      experimental-features = nix-command flakes
+    '';
+    target = "nix/nix.conf";
+  };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
@@ -77,4 +88,23 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs30-pgtk;
+    extraPackages = epkgs: [
+      epkgs.vterm
+      (epkgs.treesit-grammars.with-grammars (grammars: [ 
+        grammars.tree-sitter-typescript
+        grammars.tree-sitter-javascript
+        grammars.tree-sitter-c
+        grammars.tree-sitter-json
+        grammars.tree-sitter-tsx
+        grammars.tree-sitter-nix
+        grammars.tree-sitter-dockerfile
+        grammars.tree-sitter-python
+        grammars.tree-sitter-elisp
+        grammars.tree-sitter-org
+      ]))
+    ];
+  };
 }
