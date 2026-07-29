@@ -101,6 +101,7 @@
       (epkgs.treesit-grammars.with-grammars (grammars: [ 
         grammars.tree-sitter-typescript
         grammars.tree-sitter-javascript
+        grammars.tree-sitter-swift
         grammars.tree-sitter-c
         grammars.tree-sitter-json
         grammars.tree-sitter-tsx
