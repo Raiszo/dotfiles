@@ -84,7 +84,6 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 (setq backup-by-copying t)
 #+end_src
 
-
 * Appereance
 ** Transparent background
 #+begin_src emacs-lisp
@@ -684,18 +683,8 @@ For better history in helm
 #+begin_src emacs-lisp
 (setq compile-command "npm run build")
 #+end_src
-* Tree sitter
-Built in tree sitter is prefered
+* COMMENT Tree sitter
 #+begin_src emacs-lisp
-(use-package treesit
-  :when (and (fboundp 'treesit-available-p)
-             (treesit-available-p))
-  :custom (major-mode-remap-alist
-           '((javascript-mode . js-ts-mode)
-             (js-json-mode    . json-ts-mode)
-             (python-mode     . python-ts-mode))))
-             ;; (sh-mode         . bash-ts-mode)
-
 (setq treesit-language-source-alist
    '((astro "https://github.com/virchau13/tree-sitter-astro")
      (bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -852,15 +841,16 @@ This mode supports multiple "languages" when there is no native mode for them.
 #+end_src
 
 *** astro
+Dev put the autoload back in this commit https://git.isincredibly.gay/srxl/astro-ts-mode/commit/3ece1b9f617baeab6b9b2f997cb3b10863466d59
+that is why I get =Error loading autoloads: (void-function treesit-ready-p)= :c
+
 #+begin_src emacs-lisp
 (use-package astro-ts-mode
   :ensure t
   :hook (astro-ts-mode . (lambda () (setq tab-width 2)))
   :mode ("\\.astro\\'")
   :init
-  (setq astro-ts-mode-indent-offset 2)
-  :config
-  (add-to-list 'lsp-language-id-configuration '(astro-ts-mode . "astro")))
+  (setq astro-ts-mode-indent-offset 2))
 #+end_src
 
 *** COMMENT vue
@@ -1027,9 +1017,9 @@ There is also rustic available, but I want to use it when I feel like I need its
 #+begin_src emacs-lisp
 (use-package swift-ts-mode
   :ensure t
-  :hook (swift-ts-mode . (lambda () (setq tab-width 4)))
-  :config
-  (add-to-list 'lsp-language-id-configuration '(swift-ts-mode . "swift")))
+  :hook (swift-ts-mode . (lambda () (setq tab-width 4))))
+  ;; :config
+  ;; (add-to-list 'lsp-language-id-configuration '(swift-ts-mode . "swift")))
 (use-package lsp-sourcekit
   :ensure t
   :after lsp-mode
