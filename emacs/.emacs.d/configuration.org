@@ -67,7 +67,8 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 
 ** Disable s-t kbd on macos
 #+begin_src emacs-lisp
-(global-set-key (kbd "s-t") nil)
+(when (raiszo/my-system-type-is-darwin)
+  (global-set-key (kbd "s-t") nil))
 #+end_src
 * General stuff
 
