@@ -548,17 +548,19 @@ Integrates with =helm=
 #+begin_src emacs-lisp
 (use-package helm-projectile
   :ensure t
-  :after projectile helm perspective
+  :after projectile helm
   :config
-  (define-key projectile-mode-map [remap projectile-find-other-file] #'helm-projectile-find-other-file)
-  (define-key projectile-mode-map [remap projectile-find-file] #'helm-projectile-find-file)
-  (define-key projectile-mode-map [remap projectile-find-file-in-known-projects] #'helm-projectile-find-file-in-known-projects)
-  (define-key projectile-mode-map [remap projectile-find-file-dwim] #'helm-projectile-find-file-dwim)
-  (define-key projectile-mode-map [remap projectile-find-dir] #'helm-projectile-find-dir)
-  (define-key projectile-mode-map [remap projectile-recentf] #'helm-projectile-recentf)
-  (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'helm-projectile-switch-to-buffer)
-  (define-key projectile-mode-map [remap projectile-search] #'helm-projectile-rg)
-  (define-key projectile-mode-map [remap projectile-browse-dirty-projects] #'helm-projectile-browse-dirty-projects))
+  (helm-projectile-mode))
+  ;; (define-key projectile-mode-map [remap projectile-switch-project] #'helm-projectile-switch-project)
+  ;; (define-key projectile-mode-map [remap projectile-find-other-file] #'helm-projectile-find-other-file)
+  ;; (define-key projectile-mode-map [remap projectile-find-file] #'helm-projectile-find-file)
+  ;; (define-key projectile-mode-map [remap projectile-find-file-in-known-projects] #'helm-projectile-find-file-in-known-projects)
+  ;; (define-key projectile-mode-map [remap projectile-find-file-dwim] #'helm-projectile-find-file-dwim)
+  ;; (define-key projectile-mode-map [remap projectile-find-dir] #'helm-projectile-find-dir)
+  ;; (define-key projectile-mode-map [remap projectile-recentf] #'helm-projectile-recentf)
+  ;; (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'helm-projectile-switch-to-buffer)
+  ;; (define-key projectile-mode-map [remap projectile-search] #'helm-projectile-rg)
+  ;; (define-key projectile-mode-map [remap projectile-browse-dirty-projects] #'helm-projectile-browse-dirty-projects))
 #+end_src
 
 ** perspective
