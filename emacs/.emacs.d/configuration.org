@@ -106,7 +106,7 @@ More space in GUI mode :3
 (use-package ef-themes
   :ensure t
   :init
-  (setq ef-themes-headings
+  (setq modus-themes-headings
 	'((0 . (variable-pitch light 1.9))
 	  (1 . (variable-pitch light 1.8))
 	  (2 . (variable-pitch light 1.7))
