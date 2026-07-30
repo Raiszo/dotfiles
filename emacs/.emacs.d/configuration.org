@@ -82,9 +82,6 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 
 ;; backups
 (setq backup-by-copying t)
-
-;; need to set this so the emacs process follows the symlink (~/.emacs.d) to dotfiles
-(setq vc-follow-symlinks t)
 #+end_src
 
 
