@@ -1308,7 +1308,7 @@ Would want the fullscreen and property hiding features of epresent with the exte
 (setq ping-program-options nil)
 #+end_src
 
-* Advanced configuration
+* COMMENT Advanced configuration
 ** TLS
 Knowing that self signed certificates will be used, we need to add them to
 gnutls-trustfiles to not get weird errors when using e.g. restclient
