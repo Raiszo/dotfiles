@@ -92,11 +92,12 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 ** Disable default emacs appereance
 More space in GUI mode :3
 #+begin_src emacs-lisp
-  ;; more space in GUI mode :D
-  (setq inhibit-startup-screen t)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+;; more space in GUI mode :D
+(setq inhibit-startup-screen t)
+(menu-bar-mode -1)
+(add-hook 'window-size-change-functions 'frame-hide-title-bar-when-maximized)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 #+end_src
 
 ** Theme
