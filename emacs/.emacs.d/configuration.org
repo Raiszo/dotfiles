@@ -464,9 +464,6 @@ after upgrading to the lates emacs29 (march 22) this seems to be broken, it just
   (setq helm-autoresize-max-height 20)
   (helm-mode 1))
 
-(use-package helm-ag
-  :ensure t)
-
 ;; (use-package helm-posframe
 ;;   :ensure t
 ;;   :config
@@ -478,7 +475,7 @@ after upgrading to the lates emacs29 (march 22) this seems to be broken, it just
 ;;   (helm-posframe-enable))
 #+end_src
 
-** amx
+** COMMENT amx
 For better history in helm
 #+begin_src emacs-lisp
 (use-package amx
