@@ -567,12 +567,8 @@ For better history in helm
   (define-key projectile-mode-map [remap projectile-find-dir] #'helm-projectile-find-dir)
   (define-key projectile-mode-map [remap projectile-recentf] #'helm-projectile-recentf)
   (define-key projectile-mode-map [remap projectile-switch-to-buffer] #'helm-projectile-switch-to-buffer)
-  (define-key projectile-mode-map [remap projectile-grep] #'helm-projectile-grep)
-  (define-key projectile-mode-map [remap projectile-ack] #'helm-projectile-ack)
-  (define-key projectile-mode-map [remap projectile-ag] #'helm-projectile-ag)
-  (define-key projectile-mode-map [remap projectile-ripgrep] #'helm-projectile-rg)
-  (define-key projectile-mode-map [remap projectile-browse-dirty-projects] #'helm-projectile-browse-dirty-projects)
-  (helm-projectile-commander-bindings))
+  (define-key projectile-mode-map [remap projectile-search] #'helm-projectile-rg)
+  (define-key projectile-mode-map [remap projectile-browse-dirty-projects] #'helm-projectile-browse-dirty-projects))
 #+end_src
 
 ** perspective
