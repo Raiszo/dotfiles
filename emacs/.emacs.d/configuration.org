@@ -139,22 +139,20 @@ as suggested by https://github.com/emacs-typescript/typescript.el#support-for-co
 #+begin_src emacs-lisp
 (use-package helm
   :ensure t
-  :init
-  (add-hook 'helm-mode-hook
-	    (lambda ()
-	      (setq completion-styles
-		    (cond ((assq 'helm-flex completion-styles-alist)
-			   '(helm-flex))))))
   :bind (("M-x" . helm-M-x)
 	 ("C-x b" . helm-buffers-list)
 	 ("C-x C-f" . helm-find-files))
+  :init
+  (helm-mode 1)
+  ;; (add-hook 'helm-mode-hook
+  ;; 	    (lambda ()
+  ;; 	      (setq completion-styles
+  ;; 		    (cond ((assq 'helm-flex completion-styles-alist)
+  ;; 			   '(helm-flex))))))
   :config
-  ;; (bind-keys :map helm-map
-  ;; 	     ("TAB" . helm-execute-persistent-action))
-  (setq helm-split-window-in-side-p t)
-  (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 20)
-  (helm-mode 1))
+  (setq helm-split-window-in-side-p t
+	helm-autoresize-max-height 20)
+  (helm-autoresize-mode 1))
 
 ;; (use-package helm-posframe
 ;;   :ensure t
