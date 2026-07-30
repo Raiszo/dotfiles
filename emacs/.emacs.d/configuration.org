@@ -84,22 +84,9 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 (setq backup-by-copying t)
 #+end_src
 
-* Appereance
-** Transparent background
-#+begin_src emacs-lisp
-  (defun on-after-init ()
-    (unless (display-graphic-p (selected-frame))
-      (set-face-background 'default "unspecified-bg" (selected-frame))))
-
-  (add-hook 'window-setup-hook 'on-after-init)
-
-  ;; Setting transparency, not working like urxvt
-  (set-frame-parameter (selected-frame) 'alpha '(95 95))
-  (add-to-list 'default-frame-alist '(alpha 95 95))
-#+end_src
-
 ** Disable default emacs appereance
 More space in GUI mode :3
+
 #+begin_src emacs-lisp
 ;; more space in GUI mode :D
 (setq inhibit-startup-screen t)
@@ -109,6 +96,127 @@ More space in GUI mode :3
 (scroll-bar-mode -1)
 #+end_src
 
+** Transparent background
+#+begin_src emacs-lisp
+(defun on-after-init ()
+  (unless (display-graphic-p (selected-frame))
+    (set-face-background 'default "unspecified-bg" (selected-frame))))
+
+(add-hook 'window-setup-hook 'on-after-init)
+
+;; Setting transparency, not working like urxvt
+(set-frame-parameter (selected-frame) 'alpha '(95 95))
+(add-to-list 'default-frame-alist '(alpha 95 95))
+#+end_src
+
+** Font
+Having mixed fonts in a single buffer causes the function ~text-scale-adjust~ to behave strangely, only adjusting the default face
+According to [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][this post]] by Protesilaos, we should not specify a specific size for each face (:inherit I'm looking at you).
+Specifying a ~:height~ relative to the default fixes it.
+#+begin_src emacs-lisp
+(if (raiszo/my-system-type-is-darwin)
+    (progn
+      (set-face-attribute 'default nil :family "Fira Code" :height 135)
+      ;; (custom-set-faces
+      ;;  '(font-lock-function-name-face ((t (:inherit default :slant italic :font "Fira Code iScript" :height 1.0)))))
+      )
+  (progn
+    (set-face-attribute 'default nil :family "Cascadia Code NF" :height 110)
+    (set-face-attribute 'italic nil :family "Cascadia Code NF" :height 110 :slant 'italic :underline nil)))
+
+#+end_src
+
+** Ansi support in compilation buffers
+as suggested by https://github.com/emacs-typescript/typescript.el#support-for-compilation-mode
+#+begin_src emacs-lisp
+;;;; colorize output in compile buffer
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (ansi-color-apply-on-region compilation-filter-start (point-max)))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+#+end_src
+** Incremental completions and narrowing selections with Helm
+#+begin_src emacs-lisp
+(use-package helm
+  :ensure t
+  :init
+  (add-hook 'helm-mode-hook
+	    (lambda ()
+	      (setq completion-styles
+		    (cond ((assq 'helm-flex completion-styles-alist)
+			   '(helm-flex))))))
+  :bind (("M-x" . helm-M-x)
+	 ("C-x b" . helm-buffers-list)
+	 ("C-x C-f" . helm-find-files))
+  :config
+  ;; (bind-keys :map helm-map
+  ;; 	     ("TAB" . helm-execute-persistent-action))
+  (setq helm-split-window-in-side-p t)
+  (helm-autoresize-mode 1)
+  (setq helm-autoresize-max-height 20)
+  (helm-mode 1))
+
+;; (use-package helm-posframe
+;;   :ensure t
+;;   :config
+;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
+;; 	helm-posframe-border-width 1
+;;         helm-posframe-height 20
+;;         helm-posframe-width (round (* (frame-width) 0.49))
+;;         helm-posframe-parameters '((internal-border-width . 10)))
+;;   (helm-posframe-enable))
+#+end_src
+
+* Code navigation
+** Ace jump
+#+begin_src emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind (("C-'" . 'avy-goto-char-2)))
+#+end_src
+
+** ace window
+The solution to not have problems when using package from html modes is here https://emacs.stackexchange.com/questions/75204/stop-later-modes-from-clobbering-a-global-keybinding
+
+#+begin_src emacs-lisp
+(use-package ace-window
+  :demand t
+  :ensure t
+  :init
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  ;; (setq aw-dispatch-always t)
+  :bind* ("M-o" . ace-window))
+#+end_src
+** Other stuff
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode 1)
+  :custom
+  (undo-tree-auto-save-history nil))
+
+  (use-package multiple-cursors
+  :ensure t
+  :bind (("C-c C-v" . 'mc/edit-lines)
+	 ("C->" . 'mc/mark-next-like-this)
+	 ("C-<" . mc/mark-previous-like-this)
+	 ("C-c C-q" . mc/mark-all-like-this)))
+
+(use-package zoom-window
+  :ensure t
+  :bind ("C-x 4" . zoom-window-zoom)
+  :custom
+  (zoom-window-mode-line-color "DarkViolet" "Distinctive color when using zoom"))
+
+(use-package beacon
+  :ensure t
+  :custom
+  (beacon-color "#f1fa8c")
+  :hook (prog-mode . beacon-mode))
+#+end_src
+
+* Appereance
 ** Theme
 *** ef themes
 #+begin_src emacs-lisp
@@ -137,23 +245,6 @@ More space in GUI mode :3
         (add-hook 'ns-system-appearance-change-functions #'my/apply-theme))
     (load-theme 'ef-summer t)))
 #+end_src
-** Font
-Having mixed fonts in a single buffer causes the function ~text-scale-adjust~ to behave strangely, only adjusting the default face
-According to [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][this post]] by Protesilaos, we should not specify a specific size for each face (:inherit I'm looking at you).
-Specifying a ~:height~ relative to the default fixes it.
-#+begin_src emacs-lisp
-(if (raiszo/my-system-type-is-darwin)
-    (progn
-      (set-face-attribute 'default nil :family "Fira Code" :height 135)
-      ;; (custom-set-faces
-      ;;  '(font-lock-function-name-face ((t (:inherit default :slant italic :font "Fira Code iScript" :height 1.0)))))
-      )
-  (progn
-    (set-face-attribute 'default nil :family "Cascadia Code NF" :height 110)
-    (set-face-attribute 'italic nil :family "Cascadia Code NF" :height 110 :slant 'italic :underline nil)))
-
-#+end_src
-
 ** Ligatures settings
 #+begin_src emacs-lisp
   (use-package ligature
@@ -325,65 +416,6 @@ Specifying a ~:height~ relative to the default fixes it.
     (dimmer-mode t))
 #+end_src
 
-** Ansi support in emacs special buffers
-*** compilation
-as suggested by https://github.com/emacs-typescript/typescript.el#support-for-compilation-mode
-#+begin_src emacs-lisp
-;;;; colorize output in compile buffer
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (ansi-color-apply-on-region compilation-filter-start (point-max)))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
-#+end_src
-* Code navigation
-** Ace jump
-#+begin_src emacs-lisp
-  (use-package avy
-    :ensure t
-    :bind (("C-'" . 'avy-goto-char-2)))
-#+end_src
-
-** ace window
-The solution to not have problems when using package from html modes is here https://emacs.stackexchange.com/questions/75204/stop-later-modes-from-clobbering-a-global-keybinding
-
-#+begin_src emacs-lisp
-(use-package ace-window
-  :demand t
-  :ensure t
-  :init
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  ;; (setq aw-dispatch-always t)
-  :bind* ("M-o" . ace-window))
-#+end_src
-** Other stuff
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :ensure t
-  :config
-  (global-undo-tree-mode 1)
-  :custom
-  (undo-tree-auto-save-history nil))
-
-  (use-package multiple-cursors
-  :ensure t
-  :bind (("C-c C-v" . 'mc/edit-lines)
-	 ("C->" . 'mc/mark-next-like-this)
-	 ("C-<" . mc/mark-previous-like-this)
-	 ("C-c C-q" . mc/mark-all-like-this)))
-
-(use-package zoom-window
-  :ensure t
-  :bind ("C-x 4" . zoom-window-zoom)
-  :custom
-  (zoom-window-mode-line-color "DarkViolet" "Distinctive color when using zoom"))
-
-(use-package beacon
-  :ensure t
-  :custom
-  (beacon-color "#f1fa8c")
-  :hook (prog-mode . beacon-mode))
-#+end_src
-
 * Programming utilities
 ** COMMENT Snippets
 #+begin_src emacs-lisp
@@ -426,38 +458,6 @@ after upgrading to the lates emacs29 (march 22) this seems to be broken, it just
   :ensure t
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)))
-#+end_src
-
-** helm
-#+begin_src emacs-lisp
-(use-package helm
-  :ensure t
-  :init
-  (add-hook 'helm-mode-hook
-	    (lambda ()
-	      (setq completion-styles
-		    (cond ((assq 'helm-flex completion-styles-alist)
-			   '(helm-flex))))))
-  :bind (("M-x" . helm-M-x)
-	 ("C-x b" . helm-buffers-list)
-	 ("C-x C-f" . helm-find-files))
-  :config
-  ;; (bind-keys :map helm-map
-  ;; 	     ("TAB" . helm-execute-persistent-action))
-  (setq helm-split-window-in-side-p t)
-  (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 20)
-  (helm-mode 1))
-
-;; (use-package helm-posframe
-;;   :ensure t
-;;   :config
-;;   (setq helm-posframe-poshandler 'posframe-poshandler-frame-center
-;; 	helm-posframe-border-width 1
-;;         helm-posframe-height 20
-;;         helm-posframe-width (round (* (frame-width) 0.49))
-;;         helm-posframe-parameters '((internal-border-width . 10)))
-;;   (helm-posframe-enable))
 #+end_src
 
 ** COMMENT amx
@@ -530,7 +530,6 @@ For better history in helm
 
 * Projects
 ** projectile
-*** config
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
@@ -547,7 +546,7 @@ For better history in helm
 		(ibuffer-do-sort-by-alphabetic)))))
 #+end_src
 
-*** helm projectile integration
+Integrates with =helm=
 #+begin_src emacs-lisp
 (use-package helm-projectile
   :ensure t
@@ -575,7 +574,7 @@ For better history in helm
 
   (use-package persp-projectile
     :ensure t
-    :after perspective
+    :after perspective helm
     :config
     (define-key projectile-mode-map (kbd "C-c p p") 'projectile-persp-switch-project))
 #+end_src
