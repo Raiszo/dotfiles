@@ -69,12 +69,24 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 #+begin_src emacs-lisp
 (global-set-key (kbd "s-t") nil)
 #+end_src
-* vanilla config
-** backups
+* General stuff
+
 #+begin_src emacs-lisp
-;; (setq backup-directory-alist `(("." . "~/backups/emacs-saves")))
+(show-paren-mode)
+(electric-pair-mode)
+(global-hl-line-mode +1)
+
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
+
+;; backups
 (setq backup-by-copying t)
+
+;; need to set this so the emacs process follows the symlink (~/.emacs.d) to dotfiles
+(setq vc-follow-symlinks t)
 #+end_src
+
+
 * Appereance
 ** Transparent background
 #+begin_src emacs-lisp
@@ -326,30 +338,6 @@ as suggested by https://github.com/emacs-typescript/typescript.el#support-for-co
   (ansi-color-apply-on-region compilation-filter-start (point-max)))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 #+end_src
-* General stuff
-emacs native stuff
-#+begin_src emacs-lisp
-(show-paren-mode)
-(electric-pair-mode)
-(global-hl-line-mode +1)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package ibuffer
-  :bind (("C-x C-b" . ibuffer)))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package ibuffer-projectile
-    :ensure t
-    :config
-    (add-hook 'ibuffer-hook
-	      (lambda ()
-		(ibuffer-projectile-set-filter-groups)
-		(unless (eq ibuffer-sorting-mode 'alphabetic)
-		  (ibuffer-do-sort-by-alphabetic)))))
-#+end_src
-
 * Code navigation
 ** Ace jump
 #+begin_src emacs-lisp
@@ -552,6 +540,14 @@ For better history in helm
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
+(use-package ibuffer-projectile
+  :ensure t
+  :config
+  (add-hook 'ibuffer-hook
+	    (lambda ()
+	      (ibuffer-projectile-set-filter-groups)
+	      (unless (eq ibuffer-sorting-mode 'alphabetic)
+		(ibuffer-do-sort-by-alphabetic)))))
 #+end_src
 
 *** helm projectile integration
