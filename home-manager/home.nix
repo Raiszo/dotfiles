@@ -117,6 +117,7 @@ in
         grammars.tree-sitter-javascript
         grammars.tree-sitter-swift
         grammars.tree-sitter-c
+        grammars.tree-sitter-cpp
         grammars.tree-sitter-json
         grammars.tree-sitter-nix
         grammars.tree-sitter-astro # might require tsx and css
@@ -148,6 +149,12 @@ in
     oh-my-zsh = {
       enable = true;
     };
+
+    # this expects the file to exist which might not be there after installing swiftly :/
+    profileExtra = ''
+      # Added by swiftly
+      . "/home/raiszo/.local/share/swiftly/env.sh"
+    '';
 
     # Add extra config for vterm
     initContent = lib.mkOrder 1000 ''
