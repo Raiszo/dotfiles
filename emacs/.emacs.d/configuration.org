@@ -422,6 +422,9 @@ The solution to not have problems when using package from html modes is here htt
 (use-package magit
   :ensure t
   :bind ("<f5>" . magit-status))
+(use-package forge
+  :after magit
+  :ensure t)
 #+end_src
 *** browse at remote
 Open a file under git vc in the browser
