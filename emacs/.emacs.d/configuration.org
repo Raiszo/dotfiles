@@ -520,8 +520,7 @@ For better history in helm
 #+begin_src emacs-lisp
 (use-package drag-stuff
   :ensure t
-  :init
-  (setq drag-stuff-mode t)
+  :hook (prog-mode . drag-stuff-mode)
   :config
   (drag-stuff-define-keys))
 #+end_src
@@ -745,7 +744,8 @@ Built in tree sitter is prefered
 #+begin_src emacs-lisp
 (use-package js
   :hook (js-ts-mode . (lambda () (setq tab-width 4)))
-  :mode ("\\.mjs\\'" . js-ts-mode))
+  :mode (("\\.mjs\\'" . js-ts-mode)
+	 ("\\.cjs\\'" . js-ts-mode)))
 
 (use-package typescript-ts-mode
   :hook (typescript-ts-mode . (lambda () (setq tab-width 4)))
@@ -930,9 +930,15 @@ separate buffer."
   :ensure t
   :mode ("\\.yaml\\'" "\\.yml\\'" "\\.config\\'")
   :config
-  (setq yaml-indent-offset 4)
+  (setq yaml-indent-offset 2)
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
+#+end_src
+
+** ansible
+#+begin_src emacs-lisp
+(use-package ansible
+  :ensure t)
 #+end_src
 
 ** node
@@ -1050,6 +1056,12 @@ There is also rustic available, but I want to use it when I feel like I need its
 (use-package c-ts-mode
   :mode ("\\.c\\'")
   :hook (c-ts-mode .(lambda () (setq tab-width 4))))
+#+end_src
+** golang
+#+begin_src emacs-lisp
+(use-package go-ts-mode
+  :mode ("\\.go\\'")
+  :hook (go-ts-mode . (lambda () (setq tab-width 4))))
 #+end_src
 * Org-mode
 ** General config
@@ -1312,10 +1324,9 @@ Would want the fullscreen and property hiding features of epresent with the exte
    #+end_src
 
 ** Net utilities
-
-   #+begin_src emacs-lisp
-     (setq ping-program-options '("-c" "4"))
-   #+end_src
+#+begin_src emacs-lisp
+(setq ping-program-options nil)
+#+end_src
 
 * Advanced configuration
 ** TLS
