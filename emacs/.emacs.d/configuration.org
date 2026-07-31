@@ -922,12 +922,12 @@ separate buffer."
 
 ** node
 #+begin_src emacs-lisp
-  (use-package fnm
-    :vc (:url "https://github.com/bobrowadam/fnm.el"))
+(use-package fnm
+  :vc (:url "https://github.com/bobrowadam/fnm.el"))
 
-  ;; repl
-  (use-package nodejs-repl
-    :ensure t)
+;; repl
+(use-package nodejs-repl
+  :ensure t)
 #+end_src
 ** markdown
 #+begin_src emacs-lisp
