@@ -179,7 +179,17 @@ in
           vterm_printf "51;A$(whoami)@$(hostname):$(pwd)"
       }
       setopt PROMPT_SUBST
-      PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+      # `modern-dark-pro-capsule` registers a precmd hook at modern-dark-pro-capsule.zsh-theme:771
+      # So need to add another prompt after the theme is applied. Since lib.mkOrder puts this at
+      # the end of .zshrc I think it will be after the theme is applied
+      # PROMPT=$PROMPT'%{$(vterm_prompt_end)%}' # this won't work
+
+      _vterm_attach_prompt_marker() {
+          [[ $PROMPT == *'$(vterm_prompt_end)'* ]] ||
+              PROMPT+='%{$(vterm_prompt_end)%}'
+      }
+      autoload -Uz add-zsh-hook
+      add-zsh-hook precmd _vterm_attach_prompt_marker
     '';
   };
 }
