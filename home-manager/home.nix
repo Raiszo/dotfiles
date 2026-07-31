@@ -154,6 +154,8 @@ in
     profileExtra = ''
       # Added by swiftly
       . "/home/raiszo/.local/share/swiftly/env.sh"
+      # Needed by fnm https://github.com/Schniz/fnm#shell-setup
+      eval "$(fnm env --shell zsh)"
     '';
 
     # Add extra config for vterm
