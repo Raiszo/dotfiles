@@ -520,8 +520,7 @@ For better history in helm
 #+begin_src emacs-lisp
 (use-package editorconfig
   :ensure t
-  :config
-  (editorconfig-mode 1))
+  :hook (after-init-hook . editorconfig-mode))
 #+end_src
 
 * Projects
@@ -547,8 +546,7 @@ Integrates with =helm=
 (use-package helm-projectile
   :ensure t
   :after projectile helm
-  :config
-  (helm-projectile-mode))
+  :hook (after-init-hook . helm-projectile-mode))
   ;; (define-key projectile-mode-map [remap projectile-switch-project] #'helm-projectile-switch-project)
   ;; (define-key projectile-mode-map [remap projectile-find-other-file] #'helm-projectile-find-other-file)
   ;; (define-key projectile-mode-map [remap projectile-find-file] #'helm-projectile-find-file)
@@ -867,8 +865,8 @@ that is why I get =Error loading autoloads: (void-function treesit-ready-p)= :c
   :ensure t
   :hook (astro-ts-mode . (lambda () (setq tab-width 2)))
   :mode ("\\.astro\\'")
-  :init
-  (setq astro-ts-mode-indent-offset 2))
+  :custom
+  (astro-ts-mode-indent-offset 2))
 #+end_src
 
 *** COMMENT vue
@@ -927,8 +925,8 @@ separate buffer."
 (use-package yaml-mode
   :ensure t
   :mode ("\\.yaml\\'" "\\.yml\\'" "\\.config\\'")
-  :config
-  (setq yaml-indent-offset 2)
+  :custom
+  (yaml-indent-offset 2)
   :custom-face
   (font-lock-variable-name-face ((t (:foreground "violet")))))
 #+end_src
