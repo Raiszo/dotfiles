@@ -990,20 +990,6 @@ separate buffer."
   :mode (rx ".gleam" eos))
 #+end_src
 
-** COMMENT go
-#+begin_src emacs-lisp
-(use-package go-mode
-  :ensure t
-  :custom (gofmt-command "goimports")
-  :config
-  (add-hook 'before-save-hook #'gofmt-before-save)
-  (use-package gotest
-    :ensure t)
-  (use-package go-tag
-    :ensure t
-    :config (setq go-tag-args (list "-transform"))))
-#+end_src
-
 ** COMMENT elixir
 #+begin_src emacs-lisp
 (use-package elixir-mode
@@ -1057,6 +1043,19 @@ There is also rustic available, but I want to use it when I feel like I need its
 (use-package go-ts-mode
   :mode ("\\.go\\'")
   :hook (go-ts-mode . (lambda () (setq tab-width 4))))
+
+;; maybe enable this later
+
+;; (use-package go-mode
+;;   :ensure t
+;;   :custom (gofmt-command "goimports")
+;;   :config
+;;   (add-hook 'before-save-hook #'gofmt-before-save)
+;;   (use-package gotest
+;;     :ensure t)
+;;   (use-package go-tag
+;;     :ensure t
+;;     :config (setq go-tag-args (list "-transform"))))
 #+end_src
 * Org-mode
 ** General config
