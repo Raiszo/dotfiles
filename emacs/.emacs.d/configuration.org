@@ -76,6 +76,7 @@ Correctly load $PATH and $MANPATH on OSX (GUI)
 (show-paren-mode)
 (electric-pair-mode)
 (global-hl-line-mode +1)
+(column-number-mode 1)
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
