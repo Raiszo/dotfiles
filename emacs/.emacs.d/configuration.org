@@ -579,103 +579,124 @@ Integrates with =helm=
 
 * IDE features
 ** LSP
+lsp-mode
+
+Sources:
+- https://systemcrafters.net/emacs-from-scratch/build-your-own-ide-with-lsp-mode/
+
 #+begin_src emacs-lisp
-  ;; LSP mode config
-  (use-package flycheck
-    :ensure t)
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "s-l")
+  :hook (typescript-ts-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :custom
+  (lsp-enable-indentation nil)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-enable-snippet nil)	  ;disabled until yasnippet comes back
+  (lsp-signature-auto-activate nil)
+  (lsp-completion-use-last-result t)
+  ;; (lsp-clients-typescript-max-ts-server-memory 3072)
+  ;; (lsp-clients-typescript-prefer-use-project-ts-server t)
+  (lsp-idle-delay 0.200)
+  (read-process-output-max (* 1024 1024 8)) ;; 1mb
+  (lsp-file-watch-threshold 2000)
+  :config
+  (dolist (dir '(
+                 "[/\\\\]\\.venv$"
+                 "[/\\\\]cdk.out$"
+                 "[/\\\\]\\.mypy_cache$"
+                 "[/\\\\]__pycache__$"
+                 ;; tsserver log folder
+                 "[/\\\\]\\.log$"
+                 "[/\\\\]\\.tmp"
+                 ))
+    (push dir lsp-file-watch-ignored-directories)))
 
-  (use-package lsp-mode
-    :ensure t
-    :commands lsp
-    :custom
-    (lsp-idle-delay 0.200)
-    ;; (lsp-rust-server 'rust-analyzer)
-    ;; (lsp-rust-analyzer-server-display-inlay-hints t)
-    :config
-    (setq lsp-enable-indentation nil)
-    (setq lsp-enable-snippet t)
-    (setq lsp-signature-auto-activate nil)
-    (setq lsp-enable-on-type-formatting nil)
-    (setq lsp-completion-use-last-result t)
-    (setq lsp-clients-typescript-max-ts-server-memory 3072)
-    (setq lsp-clients-typescript-prefer-use-project-ts-server t)
-    (setq read-process-output-max (* 1024 1024 8)) ;; 1mb
-    (setq lsp-file-watch-threshold 2000)
-    (dolist (dir '(
-                   "[/\\\\]\\.venv$"
-                   "[/\\\\]cdk.out$"
-                   "[/\\\\]\\.mypy_cache$"
-                   "[/\\\\]__pycache__$"
-                   ;; tsserver log folder
-                   "[/\\\\]\\.log$"
-                   "[/\\\\]\\.tmp"
-                   ))
-      (push dir lsp-file-watch-ignored-directories))
-    :hook ((dockerfile-mode
-            sh-mode
-            ) . lsp-deferred))
-
-  ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-  (setq gc-cons-threshold (* 1024 1024 256))
-
-  (use-package lsp-ui
-    :ensure t
-    :commands lsp-ui-mode
-    :custom
-    ;; lsp-ui-doc
-    (lsp-ui-doc-enable t)
-    (lsp-ui-doc-show-with-mouse t)
-    (lsp-ui-doc-delay 0.5)
-    (lsp-ui-doc-header t)
-    (lsp-ui-doc-include-signature t)
-    (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
-    (lsp-ui-doc-max-width 120)
-    (lsp-ui-doc-max-height 30)
-    (lsp-ui-doc-use-childframe t)
-    (lsp-ui-doc-use-webkit nil)
-    ;; lsp-ui-imenu
-    (lsp-ui-imenu-enable nil)
-    (lsp-ui-imenu-kind-position 'top)
-    :hook
-    (lsp-mode . lsp-ui-mode)
-    :config
-    (setq lsp-ui-sideline-ignore-duplicate t)
-    (setq lsp-ui-sideline-enable nil))
-
-  ;; (use-package lsp-treemacs
-  ;;   :ensure t
-  ;;   :defer t
-  ;;   :commands lsp-treemacs-errors-list
-  ;;   :init
-  ;;   (lsp-treemacs-sync-mode 1))
-
-  (use-package company
-    :ensure t
-    :defer t
-    ;; :init (global-company-mode)
-    :diminish company-mode
-    :config
-    (progn
-      (setq company-tooltip-align-annotations t
-            ;; Easy navigation to candidates with M-<n>
-            company-show-numbers t)
-      (setq company-dabbrev-downcase nil))
-    :custom
-    (company-idle-delay 0.3)
-    (company-echo-delay 0)
-    (company-minimum-prefix-length 2))
-  (use-package company-quickhelp          ; Documentation popups for Company
-    :ensure t
-    :defer t
-    :hook (global-company-mode . company-quickhelp-mode))
-  (use-package company-box
-    :ensure t
-    :hook (company-mode . company-box-mode))
-  (use-package company-posframe
-    :diminish
-    :ensure t
-    :hook (company-mode . company-posframe-mode))
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setq gc-cons-threshold (* 1024 1024 256))
 #+end_src
+
+lsp-mode extra stuff
+
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-show-with-mouse t)
+  ;; (lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-delay 0.3)
+  (lsp-ui-doc-header t)
+  (lsp-ui-doc-include-signature t)
+  (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
+  (lsp-ui-doc-max-width 120)
+  (lsp-ui-doc-max-height 60)
+  (lsp-ui-doc-use-childframe t)
+  (lsp-ui-doc-use-webkit nil)
+  (lsp-ui-imenu-enable t)		;nil?
+  (lsp-ui-imenu-kind-position 'top)
+  (lsp-ui-sideline-enable nil))
+
+;; maybe add helm-lsp
+
+(defun my-typescript-company-idle-delay ()
+  "Suppress automatic completion immediately after `{` and `,`."
+  (unless (and (derived-mode-p 'typescript-ts-mode 'tsx-ts-mode)
+               (memq (char-before) '(?{ ?, ?\[)))
+    0.2))
+
+(use-package company
+  :after lsp-mode
+  :ensure t
+  :diminish company-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map lsp-mode-map
+	      ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-tooltip-align-annotations t)
+  (company-show-numbers t)
+  (company-dabbrev-downcase nil)
+  ;; (company-minimum-prefix-length 1)
+  ;; (company-idle-delay 0.2)
+  (company-minimum-prefix-length 2)
+  (company-idle-delay #'my-typescript-company-idle-delay))
+
+(setq completion-ignore-case t)
+
+;; (use-package lsp-treemacs
+;;   :ensure t
+;;   :defer t
+;;   :commands lsp-treemacs-errors-list
+;;   :init
+;;   (lsp-treemacs-sync-mode 1))
+
+;; TODO documentation via quickhelp is kind of laggy for typescript
+
+;; (use-package company-quickhelp          ; Documentation popups for Company
+;;   :ensure t
+;;   :defer t
+;;   :hook (global-company-mode . company-quickhelp-mode))
+;; (use-package company-box
+;;   :ensure t
+;;   :custom
+;;   (company-frontends '(company-box-frontend))
+;;   :hook (company-mode . company-box-mode))
+;; (use-package company-posframe
+;;   :diminish
+;;   :ensure t
+;;   :hook (company-mode . company-posframe-mode))
+
+#+end_src
+
+** flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :hook (after-init-hook . global-flycheck-mode))
+#+end_src
+
 ** compilation
 #+begin_src emacs-lisp
 (setq compile-command "npm run build")
