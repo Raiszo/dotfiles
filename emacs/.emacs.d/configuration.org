@@ -327,14 +327,14 @@ The solution to not have problems when using package from html modes is here htt
 
 ** nyan
 #+begin_src emacs-lisp
-  (use-package nyan-mode
-    :ensure t
-    :config
-    (nyan-mode 1)
-    (nyan-start-animation)
-    (nyan-toggle-wavy-trail)
-    :hook
-    (doom-modeline-mode . nyan-mode))
+(use-package nyan-mode
+  :ensure t
+  :config
+  (nyan-mode 1)
+  (nyan-start-animation)
+  (nyan-toggle-wavy-trail)
+  :hook
+  (doom-modeline-mode . nyan-mode))
 #+end_src
 
 ** COMMENT bongo-cat
