@@ -880,7 +880,6 @@ When a =.vue= file is opened in a project vue-semantic-server is used for all fi
 #+begin_src emacs-lisp
 (use-package json-ts-mode
   :config
-  (setq json-ts-mode-indent-offset 4)
   (add-hook 'json-ts-mode-hook
             (lambda ()
               (setq indent-tabs-mode nil))))
