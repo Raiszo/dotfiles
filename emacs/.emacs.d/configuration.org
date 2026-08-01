@@ -1302,20 +1302,22 @@ Would want the fullscreen and property hiding features of epresent with the exte
 #+end_src
 * Tools
 ** Google translate
-   #+begin_src emacs-lisp
-     (use-package google-translate
-       :ensure t
-       ;; :bind
-       ;; ("M-o t" . google-translate-at-point)
-       ;; ("M-o T" . google-translate-at-point-reverse)
-       :custom
-       (google-translate-default-source-language "en")
-       (google-translate-default-target-language "es"))
+#+begin_src emacs-lisp
+(use-package google-translate
+  :ensure t
+  ;; :bind
+  ;; ("M-o t" . google-translate-at-point)
+  ;; ("M-o T" . google-translate-at-point-reverse)
+  :custom
+  (google-translate-translation-directions-alist
+      '(("en" . "es") ("es" . "en"))))
+  ;; (google-translate-default-source-language "en")
+  ;; (google-translate-default-target-language "es"))
 
-     (use-package google-translate-default-ui
-       :ensure f
-       :after google-translate)
-   #+end_src
+;; (use-package google-translate-default-ui
+;;   :ensure f
+;;   :after google-translate)
+#+end_src
 
 ** Net utilities
 #+begin_src emacs-lisp
