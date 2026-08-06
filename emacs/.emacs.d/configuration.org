@@ -1057,6 +1057,14 @@ There is also rustic available, but I want to use it when I feel like I need its
 ;;     :ensure t
 ;;     :config (setq go-tag-args (list "-transform"))))
 #+end_src
+** sql
+#+begin_src emacs-lisp
+(use-package sql
+  :ensure nil
+  :defer
+  :custom
+  (sql-sqlite-options '("-header" "-box")))
+#+end_src
 * Org-mode
 ** General config
 #+begin_src emacs-lisp
