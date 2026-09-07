@@ -829,7 +829,7 @@ Argument LANGUAGE is either `typescript' or `tsx'."
 
 #+end_src
 
-** Python
+** COMMENT Python
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :ensure t
