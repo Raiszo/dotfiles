@@ -1114,6 +1114,10 @@ channel."
 #+end_src
 
 ** Exports
+#+begin_src emacs-lisp
+(use-package org-re-reveal
+  :ensure t)
+#+end_src
 ** COMMENT org babel packages
 #+begin_src emacs-lisp
 (use-package ob-restclient
@@ -1153,7 +1157,7 @@ To have project specific roam notes declare a local variable as suggested [[http
            (file+head "${citekey}.org" "#+title: ${title}\n")
            :unnarrowed t))))
 #+end_src
-** COMMENT Presentation
+** COMMENT Presentations with org-present
 #+begin_src emacs-lisp
 (defun my/org-present-start ()
   ;; Tweak font sizes
@@ -1201,12 +1205,6 @@ To have project specific roam notes declare a local variable as suggested [[http
   (add-hook 'org-present-mode-hook 'my/org-present-start)
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
   (add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide))
-#+end_src
-** COMMENT Exports
-*** org-reveal for presentations
-#+begin_src emacs-lisp
-(use-package ox-reveal
-  :ensure t)
 #+end_src
 ** COMMENT Scientific writing
 To reference from bibtex file:
