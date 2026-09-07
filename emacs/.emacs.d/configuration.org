@@ -1106,6 +1106,14 @@ channel."
   (org-table ((t (:inherit (shadow fixed-pitch))))))
 #+end_src
 
+** Bullets
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . (lambda () (org-bullets-mode 1))))
+#+end_src
+
+** Exports
 ** COMMENT org babel packages
 #+begin_src emacs-lisp
 (use-package ob-restclient
@@ -1194,13 +1202,6 @@ To have project specific roam notes declare a local variable as suggested [[http
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
   (add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide))
 #+end_src
-** Bullets
-#+begin_src emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :hook (org-mode . (lambda () (org-bullets-mode 1))))
-#+end_src
-
 ** COMMENT Exports
 *** org-reveal for presentations
 #+begin_src emacs-lisp
