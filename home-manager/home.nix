@@ -51,6 +51,7 @@ in
     gnumake
     jq
     just
+    just-lsp
     mermaid-cli
     ripgrep
     sqlite
