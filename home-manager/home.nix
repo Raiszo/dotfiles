@@ -44,14 +44,22 @@ in
     # # fonts?
     # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-    cascadia-code
     awscli2
+    cascadia-code
     fnm
+    gh
     gnumake
     jq
-    tree
+    just
+    mermaid-cli
     ripgrep
+    sqlite
     stow
+    tree
+
+    # python astral tools
+    ty
+    uv
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
