@@ -61,6 +61,9 @@ in
     ty
     uv
 
+    # swift dependencies
+    # apt-get -y install gnupg2 libc6-dev libcurl4-openssl-dev libgcc-13-dev libpython3-dev libstdc++-13-dev libxml2-dev libncurses-dev libz3-dev pkg-config zlib1g-dev
+    unzip
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
     # # environment:
