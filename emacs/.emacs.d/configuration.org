@@ -1005,6 +1005,13 @@ separate buffer."
   :hook
   (plantuml-mode . (lambda () (indent-tabs-mode nil))))
 #+end_src
+
+** mermaid
+#+begin_src emacs-lisp
+(use-package mermaid-mode
+  :ensure t)
+#+end_src
+
 ** COMMENT Rust
 There is also rustic available, but I want to use it when I feel like I need its extra features
 #+begin_src emacs-lisp
