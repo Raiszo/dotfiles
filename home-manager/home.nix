@@ -57,6 +57,7 @@ in
     sqlite
     stow
     tree
+    vscode-langservers-extracted
 
     # python astral tools
     ty
