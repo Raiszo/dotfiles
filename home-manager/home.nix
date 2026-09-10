@@ -52,6 +52,7 @@ in
     jq
     just
     just-lsp
+    usbutils
     mermaid-cli
     ripgrep
     sqlite
