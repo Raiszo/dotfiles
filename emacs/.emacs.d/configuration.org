@@ -711,7 +711,26 @@ lsp-mode extra stuff
   (dap-tooltip-mode 1)
   ;; displays floating panel with debug buttons
   ;; requies emacs 26+
-  (dap-ui-controls-mode 1))
+  (dap-ui-controls-mode 1)
+
+  ;; STM32Cube's VS Code extension ships a standalone Node DAP adapter.
+  ;; Project and target settings stay in .vscode/launch.json; this provider
+  ;; only tells dap-mode how to start the adapter.  Prefix PATH for this
+  ;; process so the adapter can use ST's `cube' wrapper to resolve its GDB,
+  ;; ST-LINK GDB server, and STM32CubeProgrammer bundles.
+  (dap-register-debug-provider
+   "stlinkgdbtarget"
+   (lambda (conf)
+     (plist-put
+      conf :dap-server-path
+      (list
+       "env"
+       (concat
+        "PATH=/home/xyz/.vscode/extensions/stmicroelectronics.stm32cube-ide-core-1.4.0-linux-x64/resources/binaries/linux/x86_64"
+        path-separator
+        (getenv "PATH"))
+       "node"
+       "/home/xyz/.vscode/extensions/stmicroelectronics.stm32cube-ide-debug-stlink-gdbserver-1.4.0/lib/adapter/STLinkDebugTargetAdapter.js")))))
 #+end_src
 
 * COMMENT Tree sitter
