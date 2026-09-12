@@ -28,3 +28,54 @@ Using swiftly https://www.swift.org/install/linux/
 ```
 
 It stores its stuff in `~/.local/share/swiftly`. For more info `swiftly init -h`.
+
+## STM32 ST-LINK debugging from Emacs
+
+The Home Manager configuration packages the STM32Cube Core and ST-LINK GDB
+server VS Code extensions and installs two stable commands:
+
+- `stm32-cube`: ST's Cube CLI wrapper.
+- `stm32-stlink-dap`: the standalone ST-LINK Debug Adapter Protocol server.
+
+The extension package contains the Cube wrapper, but the licensed GDB,
+STM32CubeProgrammer, and ST-LINK server bundles are installed separately into
+the writable per-user STM32Cube bundle store. Install them once:
+
+```bash
+stm32-cube bundle install \
+  stlink-gdbserver \
+  programmer \
+  gnu-gdb-for-stm32
+```
+
+Accept ST's licenses when prompted. By default the downloaded bundles and
+CMSIS packs live outside the Nix store under:
+
+```text
+~/.local/share/stm32cube/bundles
+~/.local/share/stm32cube/packs
+```
+
+Verify that the required commands resolve:
+
+```bash
+stm32-cube --resolve stlink-gdbserver-pure
+stm32-cube --resolve arm-none-eabi-gdb
+```
+
+Register the packaged adapter with Emacs `dap-mode`:
+
+```emacs-lisp
+(dap-register-debug-provider
+ "stlinkgdbtarget"
+ (lambda (conf)
+   (plist-put
+    conf :dap-server-path
+    (list
+     (or (executable-find "stm32-stlink-dap")
+         (error "stm32-stlink-dap is not in Emacs exec-path"))))))
+```
+
+Project-specific target, image, and build settings remain in
+`.vscode/launch.json`. The adapter wrapper changes `PATH` only for its own
+process so that the adapter can invoke the packaged `cube` executable.
