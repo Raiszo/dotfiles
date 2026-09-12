@@ -69,6 +69,12 @@ in
 
     # swift dependencies
     # apt-get -y install gnupg2 libc6-dev libcurl4-openssl-dev libgcc-13-dev libpython3-dev libstdc++-13-dev libxml2-dev libncurses-dev libz3-dev pkg-config zlib1g-dev
+
+    # swift 6.3.3 installed by swiftly comes with a version of lld dynamically linked to libxml2.so.2
+    # which is absent on Ubuntu26.04 because it has been replaced by libxml2.so.16. So, for now just do
+    # a symlink
+    # sudo ln -s /lib/x86_64-linux-gnu/libxml2.so.16 /lib/x86_64-linux-gnu/libxml2.so.2
+    # Waiting for swift clang to be updated to 23
     unzip
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
