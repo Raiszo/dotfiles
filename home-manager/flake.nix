@@ -11,7 +11,15 @@
 
   outputs = { self, nixpkgs, home-manager, ... }:
     let
-      pkgs = nixpkgs.legacyPackages."x86_64-linux"; 
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfreePredicate = pkg:
+          builtins.elem (nixpkgs.lib.getName pkg) [
+            "stm32-stlink-dap"
+            "vscode-extension-STMicroelectronics-stm32cube-ide-core"
+            "vscode-extension-STMicroelectronics-stm32cube-ide-debug-stlink-gdbserver"
+          ];
+      };
     in {
 
     # packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;

@@ -13,6 +13,8 @@ let
       ./patches/fix-int-casting-elapsed-time.patch
     ];
   };
+
+  stm32StlinkDap = pkgs.callPackage ./packages/stm32-stlink-dap.nix { };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -56,6 +58,7 @@ in
     mermaid-cli
     ripgrep
     sqlite
+    stm32StlinkDap
     stow
     tree
     vscode-langservers-extracted
