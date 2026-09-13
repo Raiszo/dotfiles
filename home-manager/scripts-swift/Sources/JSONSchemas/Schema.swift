@@ -1,18 +1,23 @@
 import JSONSchemaBuilder
 import JSONSchema
 
-/// The common configuration fields, expressed using the library's schema DSL.
-func commonConfiguration() -> some JSONSchemaComponent {
-    JSONObject {
-        JSONProperty(key: "name") { JSONString() }.required()
-        JSONProperty(key: "type") { JSONString() }.required()
-        JSONProperty(key: "request") { JSONString() }.required()
-        JSONProperty(key: "dap-compilation") {
-            JSONString().description("Command to run before starting the debug session.")
-        }
-        JSONProperty(key: "dap-compilation-dir") {
-            JSONString().description("Working directory for the compilation command.")
-        }
+// Optional fields may be omitted, but must remain strings when present.
+@Schemable(optionalNulls: false)
+struct DebugConfiguration {
+    let name: String
+    let type: String
+    let request: String
+
+    /// Command to run before starting the debug session.
+    let dapCompilation: String?
+
+    /// Working directory for the compilation command.
+    let dapCompilationDir: String?
+
+    enum CodingKeys: String, CodingKey {
+        case name, type, request
+        case dapCompilation = "dap-compilation"
+        case dapCompilationDir = "dap-compilation-dir"
     }
 }
 
@@ -20,7 +25,7 @@ func commonConfiguration() -> some JSONSchemaComponent {
 func launchDocument(
     name: String, publisher: String, version: String, requests: [JSONValue]
 ) -> JSONValue {
-    var configuration = commonConfiguration()
+    var configuration = DebugConfiguration.schema
     configuration.schemaValue["if"] = [
         "properties": ["type": ["const": "stlinkgdbtarget"]],
         "required": ["type"],

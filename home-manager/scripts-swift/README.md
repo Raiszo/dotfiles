@@ -10,7 +10,7 @@ Sources/
   GenerateJSONSchemas/GenerateJSONSchemas.swift   ArgumentParser commands
   JSONSchemas/
     JSONValue+Decoding.swift       Typed decoding helper for library JSONValue
-    Schema.swift                   JSONSchemaBuilder DSL
+    Schema.swift                   @Schemable model and builder composition
     Launch.swift                   ST launch/attach schema generation
     Localization.swift             package.nls.json decoding and replacement
 Tests/
@@ -35,15 +35,17 @@ available at `.build/release/generate-json-schemas`.
 ## Libraries
 
 - [Swift JSON Schema](https://github.com/ajevans99/swift-json-schema) provides
-  `JSONSchemaBuilder`: `JSONObject`, `JSONProperty`, `JSONString`, and `JSONArray`
-  define the fields and envelope we generate.
+  `JSONSchemaBuilder`: `@Schemable` derives the common fields from
+  `DebugConfiguration`; builders compose the surrounding document and dynamic
+  ST schemas. `CodingKeys` supplies the Emacs property names, and
+  `optionalNulls: false` permits omitted build options without accepting null.
 - [Swift ArgumentParser](https://github.com/apple/swift-argument-parser) provides
   `ParsableCommand` and `@Option`: subcommands, required options, help, diagnostics,
   and shell completion metadata are handled by the library.
 
 `Package.resolved` records the selected releases and transitive dependencies.
 The schema builder includes macro infrastructure, so its first build also
-compiles SwiftSyntax even though this command uses the DSL without macros.
+compiles SwiftSyntax to expand the `@Schemable` model.
 
 The input manifest uses `Decodable` structs. The library's `JSONValue` represents
 upstream schema fragments and generated schemas throughout, preserving unknown

@@ -36,12 +36,12 @@ private struct SchemaError: Error, CustomStringConvertible {
 private func configurationSchema(_ value: JSONValue, request: String) throws -> JSONValue {
     var source = try value.decoded(as: [String: JSONValue].self)
     var fields = try value.decoded(as: RequestFields.self)
-    let common = try commonConfiguration().schemaValue.value
+    let common = try DebugConfiguration.schema.schemaValue.value
         .decoded(as: RequestFields.self)
     fields.properties.merge(common.properties) { _, generated in generated }
     fields.properties["type"] = .object(["const": .string(adapterType)])
     fields.properties["request"] = .object(["const": .string(request)])
-    var required = ["name", "type", "request"]
+    var required = common.required ?? []
     for key in fields.required ?? [] where !required.contains(key) {
         required.append(key)
     }
