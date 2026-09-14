@@ -26,6 +26,7 @@ private struct ConfigurationAttributes: Decodable {
 
 private struct RequestFields: Decodable {
     var properties: [String: JSONValue]
+    // Validate upstream required entries while preserving the original array.
     let required: [String]?
 }
 
@@ -36,18 +37,10 @@ private struct SchemaError: Error, CustomStringConvertible {
 private func configurationSchema(_ value: JSONValue, request: String) throws -> JSONValue {
     var source = try value.decoded(as: [String: JSONValue].self)
     var fields = try value.decoded(as: RequestFields.self)
-    let common = try DebugConfiguration.schema.schemaValue.value
-        .decoded(as: RequestFields.self)
-    fields.properties.merge(common.properties) { _, generated in generated }
-    fields.properties["type"] = .object(["const": .string(adapterType)])
     fields.properties["request"] = .object(["const": .string(request)])
-    var required = common.required ?? []
-    for key in fields.required ?? [] where !required.contains(key) {
-        required.append(key)
-    }
-    source["type"] = .string("object")
+    // // Allow common fields declared by the outer schema, as well as unknown fields.
+    // source.removeValue(forKey: "additionalProperties")
     source["properties"] = .object(.init(uniqueKeysWithValues: fields.properties.sorted { $0.key < $1.key }))
-    source["required"] = .array(required.map(JSONValue.string))
     return .object(.init(uniqueKeysWithValues: source.sorted { $0.key < $1.key }))
 }
 

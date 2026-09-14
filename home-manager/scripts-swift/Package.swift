@@ -22,7 +22,7 @@ let package = Package(
         .testTarget(name: "JSONSchemasTests", dependencies: [
             "JSONSchemas",
             .product(name: "JSONSchema", package: "swift-json-schema"),
-        ]),
+        ], resources: [.copy("Fixtures")]),
         .testTarget(name: "CommandTests", dependencies: ["GenerateJSONSchemas"]),
     ]
 )

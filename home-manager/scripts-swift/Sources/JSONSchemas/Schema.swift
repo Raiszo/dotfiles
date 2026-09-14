@@ -26,11 +26,18 @@ func launchDocument(
     name: String, publisher: String, version: String, requests: [JSONValue]
 ) -> JSONValue {
     var configuration = DebugConfiguration.schema
-    configuration.schemaValue["if"] = [
-        "properties": ["type": ["const": "stlinkgdbtarget"]],
-        "required": ["type"],
+    // Add another conditional here when supporting another adapter's schema.
+    configuration.schemaValue["allOf"] = [
+        [
+            "title": .string("stlinkgdbtarget — \(name) \(version)"),
+            "$comment": .string("Generated from \(publisher).\(name)@\(version)"),
+            "if": [
+                "properties": ["type": ["const": "stlinkgdbtarget"]],
+                "required": ["type"],
+            ],
+            "then": ["oneOf": .array(requests)],
+        ],
     ]
-    configuration.schemaValue["then"] = ["oneOf": .array(requests)]
     let document = JSONObject {
         JSONProperty(key: "version") { JSONString().default("0.2.0") }
         JSONProperty(key: "configurations") {
@@ -38,8 +45,7 @@ func launchDocument(
         }
     }
     .schema("http://json-schema.org/draft-07/schema#")
-    .title("Emacs launch.json — \(name) \(version)")
-    .comment("Generated from \(publisher).\(name)@\(version)")
+    .title("Emacs launch.json")
 
     return document.schemaValue.value
 }

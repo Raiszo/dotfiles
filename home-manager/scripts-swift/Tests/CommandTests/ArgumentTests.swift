@@ -1,16 +1,18 @@
-import XCTest
+import Testing
 @testable import GenerateJSONSchemas
 
-final class ArgumentTests: XCTestCase {
+struct ArgumentTests {
+    @Test
     func testLaunchOptions() throws {
         let command = try GenerateJSONSchemas.parseAsRoot([
             "launch", "--extension-dir", "/tmp/adapter", "--output=/tmp/schema.json",
         ])
-        let launch = try XCTUnwrap(command as? GenerateJSONSchemas.Launch)
-        XCTAssertEqual(launch.extensionDir, "/tmp/adapter")
-        XCTAssertEqual(launch.output, "/tmp/schema.json")
+        let launch = try #require(command as? GenerateJSONSchemas.Launch)
+        #expect(launch.extensionDir == "/tmp/adapter")
+        #expect(launch.output == "/tmp/schema.json")
     }
 
+    @Test
     func testInvalidOptions() {
         for arguments in [
             ["launch"],
@@ -19,7 +21,9 @@ final class ArgumentTests: XCTestCase {
             ["launch", "--extension-dir", "/tmp/adapter", "--output", "/tmp/schema.json", "--typo"],
             ["unknown"],
         ] {
-            XCTAssertThrowsError(try GenerateJSONSchemas.parseAsRoot(arguments))
+            #expect(throws: (any Error).self) {
+                try GenerateJSONSchemas.parseAsRoot(arguments)
+            }
         }
     }
 }
