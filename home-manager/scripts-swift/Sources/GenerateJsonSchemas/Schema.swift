@@ -2,8 +2,23 @@ import JSONSchema
 import JSONSchemaBuilder
 
 func launchDocument(
-    name: String, publisher: String, version: String, requests: [JSONValue]
+    name: String, publisher: String, version: String, launchRequest: JSONValue, attachRequest: JSONValue
 ) -> JSONValue {
+    let conditions: [JSONValue] = [("launch", launchRequest), ("attach", attachRequest)].map { request, schema in
+        [
+            "title": .string("stlinkgdbtarget — \(name) \(version)"),
+            "$comment": .string("Generated from \(publisher).\(name)@\(version)"),
+            "if": [
+                "properties": [
+                    "type": ["const": "stlinkgdbtarget"],
+                    "request": ["const": .string(request)],
+                ],
+                "required": ["type", "request"],
+            ],
+            "then": schema,
+        ]
+    }
+
     // Used for schema emission only; JSONAnyValue does not validate instances.
     var configuration = JSONAnyValue()
     configuration.schemaValue = [
@@ -11,7 +26,9 @@ func launchDocument(
         "properties": [
             "name": ["type": "string"],
             "type": ["type": "string"],
-            "request": ["type": "string"],
+            // There are only two requests
+            // https://code.visualstudio.com/docs/debugtest/debugging-configuration#_launch-versus-attach-configurations
+            "request": ["type": "string", "enum": ["launch", "attach"]],
             "dap-compilation": [
                 "type": "string",
                 "description": "Command to run before starting the debug session.",
@@ -22,17 +39,7 @@ func launchDocument(
             ],
         ],
         "required": ["name", "type", "request"],
-        "allOf": [
-            [
-                "title": .string("stlinkgdbtarget — \(name) \(version)"),
-                "$comment": .string("Generated from \(publisher).\(name)@\(version)"),
-                "if": [
-                    "properties": ["type": ["const": "stlinkgdbtarget"]],
-                    "required": ["type"],
-                ],
-                "then": ["oneOf": .array(requests)],
-            ],
-        ],
+        "allOf": .array(conditions),
     ]
 
     let document = JSONObject {

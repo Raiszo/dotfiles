@@ -59,13 +59,12 @@ public func generateLaunch(
     guard matches.count == 1, let attributes = matches[0].configurationAttributes else {
         throw SchemaError(description: "Expected exactly one \(adapterType) debugger with configurationAttributes")
     }
-    let requests = try [
-        configurationSchema(localize(attributes.launch, using: translations, warn: warn), request: "launch"),
-        configurationSchema(localize(attributes.attach, using: translations, warn: warn), request: "attach"),
-    ]
-    let document = launchDocument(
-        name: manifest.name, publisher: manifest.publisher,
-        version: manifest.version, requests: requests
+    let document = try launchDocument(
+        name: manifest.name, publisher: manifest.publisher, version: manifest.version,
+        launchRequest: configurationSchema(
+            localize(attributes.launch, using: translations, warn: warn), request: "launch"),
+        attachRequest: configurationSchema(
+            localize(attributes.attach, using: translations, warn: warn), request: "attach")
     )
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]

@@ -19,7 +19,11 @@
             "type": "string"
           },
           "request": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "launch",
+              "attach"
+            ]
           },
           "dap-compilation": {
             "type": "string",
@@ -37,62 +41,80 @@
         ],
         "allOf": [
           {
+            "title": "stlinkgdbtarget — test-adapter 1.4.0",
+            "$comment": "Generated from STMicroelectronics.test-adapter@1.4.0",
             "if": {
               "properties": {
                 "type": {
                   "const": "stlinkgdbtarget"
+                },
+                "request": {
+                  "const": "launch"
                 }
               },
               "required": [
-                "type"
+                "type",
+                "request"
               ]
             },
             "then": {
-              "oneOf": [
-                {
-                  "required": [
-                    "program",
-                    "name"
-                  ],
-                  "x-future-keyword": {
-                    "minimum": 9007199254740993
-                  },
-                  "properties": {
-                    "request": {
-                      "const": "launch"
-                    },
-                    "program": {
-                      "type": "string",
-                      "description": "Executable"
-                    },
-                    "enabled": {
-                      "default": false
-                    },
-                    "commands": {
-                      "default": []
-                    },
-                    "optional": {
-                      "default": null
-                    },
-                    "mode": {
-                      "enum": [
-                        "auto"
-                      ],
-                      "default": "auto"
-                    }
-                  }
+              "required": [
+                "program",
+                "name"
+              ],
+              "x-future-keyword": {
+                "minimum": 9007199254740993
+              },
+              "properties": {
+                "request": {
+                  "const": "launch"
                 },
-                {
-                  "properties": {
-                    "request": {
-                      "const": "attach"
-                    }
-                  }
+                "program": {
+                  "type": "string",
+                  "description": "Executable"
+                },
+                "enabled": {
+                  "default": false
+                },
+                "commands": {
+                  "default": []
+                },
+                "optional": {
+                  "default": null
+                },
+                "mode": {
+                  "enum": [
+                    "auto"
+                  ],
+                  "default": "auto"
                 }
+              }
+            }
+          },
+          {
+            "title": "stlinkgdbtarget — test-adapter 1.4.0",
+            "$comment": "Generated from STMicroelectronics.test-adapter@1.4.0",
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "stlinkgdbtarget"
+                },
+                "request": {
+                  "const": "attach"
+                }
+              },
+              "required": [
+                "type",
+                "request"
               ]
             },
-            "title": "stlinkgdbtarget — test-adapter 1.4.0",
-            "$comment": "Generated from STMicroelectronics.test-adapter@1.4.0"
+            "then": {
+              "properties": {
+                "request": {
+                  "const": "attach"
+                }
+              }
+            }
           }
         ]
       }
