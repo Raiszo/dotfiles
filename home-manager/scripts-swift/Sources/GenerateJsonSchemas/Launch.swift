@@ -38,10 +38,10 @@ private func configurationSchema(_ value: JSONValue, request: String) throws -> 
     var source = try value.decoded(as: [String: JSONValue].self)
     var fields = try value.decoded(as: RequestFields.self)
     fields.properties["request"] = .object(["const": .string(request)])
-    // // Allow common fields declared by the outer schema, as well as unknown fields.
-    // source.removeValue(forKey: "additionalProperties")
-    source["properties"] = .object(.init(uniqueKeysWithValues: fields.properties.sorted { $0.key < $1.key }))
-    return .object(.init(uniqueKeysWithValues: source.sorted { $0.key < $1.key }))
+    // source["properties"] = .object(.init(uniqueKeysWithValues: fields.properties.sorted { $0.key < $1.key }))
+    // return .object(.init(uniqueKeysWithValues: source.sorted { $0.key < $1.key }))
+    source["properties"] = .object(.init(uniqueKeysWithValues: fields.properties ))
+    return .object(.init(uniqueKeysWithValues: source))
 }
 
 /// Generate a personal launch.json schema from the exact adapter manifest and default translations.
@@ -68,7 +68,7 @@ public func generateLaunch(
         version: manifest.version, requests: requests
     )
     let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+    encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
     var output = try encoder.encode(document)
     output.append(0x0A)
     return output
