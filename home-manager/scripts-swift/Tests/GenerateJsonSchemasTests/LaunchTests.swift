@@ -1,7 +1,7 @@
 import Foundation
 import JSONSchema
 import Testing
-@testable import JSONSchemas
+@testable import GenerateJsonSchemas
 
 struct LaunchTests {
     private let fixture = #"""

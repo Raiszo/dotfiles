@@ -1,36 +1,35 @@
 import ArgumentParser
 import Foundation
-import JSONSchemas
 
 @main
-struct GenerateJSONSchemas: ParsableCommand {
+struct GenerateJsonSchemas: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "generate-json-schemas",
-        abstract: "Generate personal JSON schemas.",
+        abstract: "Generate personal JSON schemas",
         subcommands: [Launch.self]
     )
 }
 
-extension GenerateJSONSchemas {
+extension GenerateJsonSchemas {
     struct Launch: ParsableCommand {
         static let configuration = CommandConfiguration(
-            abstract: "Generate an Emacs launch.json schema from an ST adapter extension."
+            abstract: "Generate my JSON schemas"
         )
 
-        @Option(name: .long, help: "ST adapter extension directory.", completion: .directory)
-        var extensionDir: String
+        @Option(name: .long, help: "STM32Cube Debug STLink GDB Server extension directory", completion: .directory)
+        var stlinkExtensionDir: String
 
-        @Option(name: .long, help: "Destination JSON schema file.", completion: .file())
+        @Option(name: .long, help: "Destination JSON schema file", completion: .file())
         var output: String
 
         mutating func validate() throws {
-            guard !extensionDir.isEmpty, !output.isEmpty else {
+            guard !stlinkExtensionDir.isEmpty, !output.isEmpty else {
                 throw ValidationError("Paths must not be empty.")
             }
         }
 
         func run() throws {
-            let directory = URL(fileURLWithPath: extensionDir, isDirectory: true)
+            let directory = URL(fileURLWithPath: stlinkExtensionDir, isDirectory: true)
             let schema = try generateLaunch(
                 manifestData: Data(contentsOf: directory.appendingPathComponent("package.json")),
                 translationData: Data(contentsOf: directory.appendingPathComponent("package.nls.json")),
