@@ -63,19 +63,6 @@ stm32-cube --resolve stlink-gdbserver-pure
 stm32-cube --resolve arm-none-eabi-gdb
 ```
 
-Register the packaged adapter with Emacs `dap-mode`:
-
-```emacs-lisp
-(dap-register-debug-provider
- "stlinkgdbtarget"
- (lambda (conf)
-   (plist-put
-    conf :dap-server-path
-    (list
-     (or (executable-find "stm32-stlink-dap")
-         (error "stm32-stlink-dap is not in Emacs exec-path"))))))
-```
-
 Project-specific target, image, and build settings remain in
 `.vscode/launch.json`. The adapter wrapper changes `PATH` only for its own
 process so that the adapter can invoke the packaged `cube` executable.
