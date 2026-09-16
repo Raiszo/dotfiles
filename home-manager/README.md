@@ -45,6 +45,7 @@ the writable per-user STM32Cube bundle store. Install them once:
 stm32-cube bundle install \
   stlink-gdbserver \
   programmer \
+  cube-cmsis-scanner \
   gnu-gdb-for-stm32
 ```
 
@@ -63,19 +64,27 @@ stm32-cube --resolve stlink-gdbserver-pure
 stm32-cube --resolve arm-none-eabi-gdb
 ```
 
-Register the packaged adapter with Emacs `dap-mode`:
-
-```emacs-lisp
-(dap-register-debug-provider
- "stlinkgdbtarget"
- (lambda (conf)
-   (plist-put
-    conf :dap-server-path
-    (list
-     (or (executable-find "stm32-stlink-dap")
-         (error "stm32-stlink-dap is not in Emacs exec-path"))))))
-```
-
 Project-specific target, image, and build settings remain in
 `.vscode/launch.json`. The adapter wrapper changes `PATH` only for its own
 process so that the adapter can invoke the packaged `cube` executable.
+
+### CMSIS device packs
+
+Home Manager also installs `cpackget` from a pinned upstream Linux x86-64
+release. The `programs.zsh.sessionVariables` declaration in [home.nix](home.nix)
+sets `CMSIS_PACK_ROOT` to `$HOME/.local/share/stm32cube/packs`, matching Cube's
+default pack repository. If you customize Cube's pack location, update this
+declaration too. After activating Home Manager, start a new login Zsh session
+before running these commands:
+
+```bash
+# Run once for a new pack repository:
+cpackget init https://www.keil.com/pack/index.pidx
+# Example for STM32C5 devices; choose the pack matching your MCU:
+cpackget add 'STMicroelectronics::stm32c5xx_dfp@2.1.0'
+stm32-cube cmsis-scanner --list-packs --cmsis-pack-root "$CMSIS_PACK_ROOT"
+```
+
+Packs are downloaded to the writable user repository, outside the Nix
+store; adding cpackget to Home Manager does not install device packs
+itself.

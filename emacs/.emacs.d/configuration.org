@@ -688,6 +688,14 @@ lsp-mode extra stuff
 
 #+end_src
 
+** lsp json
+#+begin_src emacs-lisp
+(use-package lsp-json
+  :after lsp-mode
+  :custom
+  (lsp-json-schemas
+   `[(:fileMatch ["**/.vscode/launch.json"] :url ,(lsp--path-to-uri (expand-file-name "~/.config/my-json-schemas/launch.schema.json")))]))
+#+end_src
 ** flycheck
 #+begin_src emacs-lisp
 (use-package flycheck
