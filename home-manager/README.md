@@ -45,6 +45,7 @@ the writable per-user STM32Cube bundle store. Install them once:
 stm32-cube bundle install \
   stlink-gdbserver \
   programmer \
+  cube-cmsis-scanner \
   gnu-gdb-for-stm32
 ```
 
