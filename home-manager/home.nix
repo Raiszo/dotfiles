@@ -14,6 +14,7 @@ let
     ];
   };
 
+  cpackget = pkgs.callPackage ./packages/cpackget.nix { };
   stm32StlinkDap = pkgs.callPackage ./packages/stm32-stlink-dap.nix { };
 in
 {
@@ -48,6 +49,7 @@ in
 
     awscli2
     cascadia-code
+    cpackget
     fnm
     gh
     gnumake
