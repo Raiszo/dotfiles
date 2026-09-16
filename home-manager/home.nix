@@ -136,20 +136,22 @@ in
     extraPackages = epkgs: [
       epkgs.vterm
       (epkgs.treesit-grammars.with-grammars (grammars: [
-        grammars.tree-sitter-typescript
-        grammars.tree-sitter-javascript
-        grammars.tree-sitter-swift
+        grammars.tree-sitter-astro # might require tsx and css
         grammars.tree-sitter-c
         grammars.tree-sitter-cpp
-        grammars.tree-sitter-json
-        grammars.tree-sitter-nix
-        grammars.tree-sitter-astro # might require tsx and css
-        grammars.tree-sitter-tsx
         grammars.tree-sitter-css
         grammars.tree-sitter-dockerfile
-        grammars.tree-sitter-python
         grammars.tree-sitter-elisp
+        grammars.tree-sitter-json
+        grammars.tree-sitter-nix
         grammars.tree-sitter-org
+        grammars.tree-sitter-python
+        grammars.tree-sitter-swift
+
+	# ts stuff
+        grammars.tree-sitter-javascript
+        grammars.tree-sitter-tsx
+        grammars.tree-sitter-typescript
       ]))
     ];
   };
