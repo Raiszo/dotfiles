@@ -143,6 +143,7 @@ in
         grammars.tree-sitter-dockerfile
         grammars.tree-sitter-elisp
         grammars.tree-sitter-json
+        grammars.tree-sitter-just
         grammars.tree-sitter-nix
         grammars.tree-sitter-org
         grammars.tree-sitter-python
