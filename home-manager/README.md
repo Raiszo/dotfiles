@@ -79,3 +79,12 @@ Register the packaged adapter with Emacs `dap-mode`:
 Project-specific target, image, and build settings remain in
 `.vscode/launch.json`. The adapter wrapper changes `PATH` only for its own
 process so that the adapter can invoke the packaged `cube` executable.
+
+### CMSIS device packs
+
+Home Manager also installs `cpackget` from a pinned upstream Linux x86-64
+release. The `programs.zsh.sessionVariables` declaration in [home.nix](home.nix)
+sets `CMSIS_PACK_ROOT` to `$HOME/.local/share/stm32cube/packs`, matching Cube's
+default pack repository. If you customize Cube's pack location, update this
+declaration too. After activating Home Manager, start a new login Zsh session
+before running these commands:

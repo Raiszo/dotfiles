@@ -173,6 +173,9 @@ in
        MODERN_DARK_PRO_SHOW_CLOCK = "false";
        MODERN_DARK_PRO_PILL_STYLE = "round";
        LSP_USE_PLISTS = "true";
+       # Cube's default pack repository; see README.md, "CMSIS device packs".
+       # https://github.com/Open-CMSIS-Pack/cpackget#specifying-the-working-pack-root-folder
+       CMSIS_PACK_ROOT = "${config.home.homeDirectory}/.local/share/stm32cube/packs";
     };
     oh-my-zsh = {
       enable = true;
