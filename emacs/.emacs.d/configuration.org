@@ -762,6 +762,15 @@ lsp-mode extra stuff
 (use-package just-ts-mode
   :ensure t)
 #+end_src
+** Python
+#+begin_src emacs-lisp
+(use-package python
+  :ensure nil
+  :init
+  (add-to-list 'major-mode-remap-alist
+               '(python-mode . python-ts-mode)))
+#+end_src
+
 * Languages (unsorted)
 ** Env files
 #+begin_src emacs-lisp
@@ -865,21 +874,6 @@ Argument LANGUAGE is either `typescript' or `tsx'."
            ((parent-is "jsx_self_closing_element") parent typescript-ts-mode-indent-offset)))
      ;; FIXME(Theo): This no-node catch-all should be removed.  When is it needed?
      (no-node parent-bol 0))))
-
-#+end_src
-
-** COMMENT Python
-#+begin_src emacs-lisp
-(use-package lsp-pyright
-  :ensure t
-  :hook (python-ts-mode . (lambda ()
-                            (require 'lsp-pyright)
-                            (lsp)))  ; or lsp-deferred
-  :init
-  (when (executable-find "python3")
-    (setq lsp-pyright-python-executable-cmd "python3.12"))
-  (setq lsp-pyright-multi-root nil)
-  (setq lsp-pyright-disable-organize-imports nil))
 
 #+end_src
 
