@@ -589,6 +589,12 @@ Sources:
   :hook (typescript-ts-mode . lsp-deferred)
   :commands (lsp lsp-deferred)
   :custom
+  ;; use ts-go
+  (lsp-typescript nil)
+  (lsp-tsgo t)
+  (lsp-disabled-clients '(ts-ls))
+  (lsp-clients-tsgo-path "tsc")
+  ;;
   (lsp-enable-indentation nil)
   (lsp-enable-on-type-formatting nil)
   (lsp-enable-snippet nil)	  ;disabled until yasnippet comes back
