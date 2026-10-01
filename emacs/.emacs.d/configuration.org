@@ -1155,6 +1155,9 @@ channel."
 #+begin_src emacs-lisp
 (use-package ob-awsdac
   :load-path "./ob-awsdac")
+
+(use-package ob-mermaid
+  :ensure t)
 #+end_src
 
 Now configure babel
@@ -1162,7 +1165,8 @@ Now configure babel
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((awsdac . t)
+ '((mermaid . t)
+   (awsdac . t)
    (emacs-lisp . t)))
 #+end_src
 
