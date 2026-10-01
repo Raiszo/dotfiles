@@ -1151,6 +1151,21 @@ channel."
 (use-package org-re-reveal
   :ensure t)
 #+end_src
+** org babel packages
+#+begin_src emacs-lisp
+(use-package ob-awsdac
+  :load-path "./ob-awsdac")
+#+end_src
+
+Now configure babel
+
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((awsdac . t)
+   (emacs-lisp . t)))
+#+end_src
+
 ** COMMENT org babel packages
 #+begin_src emacs-lisp
 (use-package ob-restclient

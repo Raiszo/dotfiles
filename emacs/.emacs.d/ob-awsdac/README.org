@@ -1,0 +1,81 @@
+#+title: ob-awsdac
+
+Org Babel support for [[https://github.com/awslabs/diagram-as-code][AWS Diagram-as-Code]].  It renders =awsdac= YAML source blocks to
+image files with the =awsdac= CLI, allowing Org exporters such as =ox-reveal= to include the
+resulting diagrams.
+
+* Requirements
+
+- Emacs 27.1 or newer
+- Org 9.4 or newer
+- =awsdac= available in =exec-path=, or =ob-awsdac-cli-path= customized to its executable
+
+* Installation
+
+Add this directory to =load-path= and enable the Babel language:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/ob-awsdac")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((awsdac . t)))
+#+end_src
+
+=awsdac= blocks use =yaml-mode= for source editing when that mode is installed.
+
+* Usage
+
+Every block requires a =:file= header.  Use =:exports both= when the exported presentation
+should show the YAML as well as the generated diagram:
+
+#+begin_src org
+,* Architecture
+
+,#+name: application-architecture
+,#+begin_src awsdac :file images/application-architecture.png :exports both :cache yes
+,Diagram:
+,  DefinitionFiles:
+,    - Type: URL
+,      Url: https://raw.githubusercontent.com/awslabs/diagram-as-code/v0.23/definitions/definition-for-aws-icons-light.yaml
+,
+,  Resources:
+,    Canvas:
+,      Type: AWS::Diagram::Canvas
+,      Children:
+,        - User
+,    User:
+,      Type: AWS::Diagram::Resource
+,      Preset: User
+,#+end_src
+#+end_src
+
+Evaluating the block with =C-c C-c=, or exporting with Babel evaluation enabled, creates the
+image and inserts an Org result link:
+
+#+begin_src org
+,#+RESULTS: application-architecture
+[[file:images/application-architecture.png]]
+#+end_src
+
+Keep output images beneath the presentation directory so their relative links continue to work
+beside the exported reveal.js HTML.
+
+* Header arguments
+
+| Argument                       | Meaning                                      |
+|--------------------------------+----------------------------------------------|
+| =:file=                        | Output image path; required                  |
+| =:width=                       | Output width passed to =awsdac=              |
+| =:height=                      | Output height passed to =awsdac=             |
+| =:allow-untrusted-definitions= | Pass the corresponding flag when set to yes |
+| =:template=                    | Process the YAML as a Go template            |
+| =:cmdline=                     | Additional CLI arguments                     |
+| =:exports=                     | Use =results=, =code=, or =both=             |
+
+Additional =:cmdline= arguments are tokenized and passed directly to =awsdac= without invoking a
+shell.
+
+* AI disclosure
+This version of =ob-awsdac= was entirely AI generated due to time constraints, I'll soon check every
+single line of code.
