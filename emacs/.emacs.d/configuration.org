@@ -1143,6 +1143,9 @@ CONTENTS is a string.  INFO is a plist used as a communication
 channel."
     (when (org-string-nw-p contents)
       (format "$%s$" (org-trim contents))))
+  (add-hook 'org-mode-hook '(lambda ()
+			      (setq fill-column 100)
+			      (display-fill-column-indicator-mode 1)))
   :custom-face
   (org-table ((t (:inherit (shadow fixed-pitch))))))
 #+end_src
