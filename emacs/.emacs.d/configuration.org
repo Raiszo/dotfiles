@@ -797,7 +797,8 @@ lsp-mode extra stuff
 	 ("\\.cjs\\'" . js-ts-mode)))
 
 (use-package typescript-ts-mode
-  :hook (typescript-ts-mode . (lambda () (setq tab-width 4)))
+  :hook (typescript-ts-mode . (lambda () (setq tab-width 4
+					       fill-column 100)))
   :custom
   (typescript-ts-mode-indent-offset 4))
 
