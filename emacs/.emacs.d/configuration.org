@@ -1122,6 +1122,7 @@ There is also rustic available, but I want to use it when I feel like I need its
 ;; 		      (delete 'company-semantic (add-to-list (make-local-variable 'company-backends) 'company-emoji))))
 (use-package org
   :after ef-themes
+  :hook (org-mode . turn-on-auto-fill)
   :config
   (setq org-image-actual-width nil)
   (setq org-edit-src-content-indentation 0)
