@@ -738,30 +738,6 @@ lsp-mode extra stuff
 	   (error "stm32-stlink-dap is not in Emacs exec-path")))))))
 #+end_src
 
-* COMMENT Tree sitter
-#+begin_src emacs-lisp
-(setq treesit-language-source-alist
-   '((astro "https://github.com/virchau13/tree-sitter-astro")
-     (bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (c "https://github.com/tree-sitter/tree-sitter-c")
-     ;; (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (java "https://github.com/tree-sitter/tree-sitter-java")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.21.1" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-#+end_src
 * Language modes
 ** just
 #+begin_src emacs-lisp
@@ -811,79 +787,6 @@ lsp-mode extra stuff
   :ensure t
   :mode "\\.nix\\'")
 #+end_src
-** COMMENT typescript
-#+begin_src emacs-lisp
-(defun my-typescript-ts-mode--indent-rules (language)
-  "Rules used for indentation.
-Argument LANGUAGE is either `typescript' or `tsx'."
-  `((,language
-     ((parent-is "program") column-0 0)
-     ((node-is "}") parent-bol 0)
-     ((node-is ")") parent-bol 0)
-     ((node-is "]") parent-bol 0)
-     ((node-is ">") parent-bol 0)
-
-     ;; this works for
-     ;; type A = null
-     ;;   | string
-     ;;   | number
-     ;; does not work for
-     ;; type A =
-     ;; | string
-     ;; | number
-     ((parent-is "type_alias_declaration") parent-bol typescript-ts-mode-indent-offset)
-     ;; indentar "parent-bol 0" si es el primer nodo en su linea
-     ;; de lo contrario usar "parent-bol typescript-ts-mode-indent-offset"
-     ;; pero como hacer esto???
-     ((parent-is "union_type") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "intersection_type") parent-bol typescript-ts-mode-indent-offset)
-
-     ((and (parent-is "comment") c-ts-common-looking-at-star)
-      c-ts-common-comment-start-after-first-star -1)
-     ((parent-is "comment") prev-adaptive-prefix 0)
-     ((parent-is "ternary_expression") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "member_expression") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "named_imports") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "statement_block") parent-bol typescript-ts-mode-indent-offset)
-
-	 ;; to indent case "CASE": one level from parent
-	 ((parent-is "switch_body") parent-bol typescript-ts-mode-indent-offset)
-
-     ((parent-is "switch_case") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "switch_default") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "type_arguments") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "variable_declarator") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "arguments") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "array") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "formal_parameters") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "template_string") no-indent) ; Don't indent the string contents.
-     ((parent-is "template_substitution") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "object_pattern") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "object") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "object_type") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "enum_body") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "class_body") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "interface_body") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "arrow_function") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "parenthesized_expression") parent-bol typescript-ts-mode-indent-offset)
-     ((parent-is "binary_expression") parent-bol typescript-ts-mode-indent-offset)
-
-     ,@(when (eq language 'tsx)
-         `(((match "<" "jsx_fragment") parent 0)
-           ((parent-is "jsx_fragment") parent typescript-ts-mode-indent-offset)
-           ((node-is "jsx_closing_element") parent 0)
-           ((match "jsx_element" "statement") parent typescript-ts-mode-indent-offset)
-           ((parent-is "jsx_element") parent typescript-ts-mode-indent-offset)
-           ((parent-is "jsx_text") parent-bol typescript-ts-mode-indent-offset)
-           ((parent-is "jsx_opening_element") parent typescript-ts-mode-indent-offset)
-           ((parent-is "jsx_expression") parent-bol typescript-ts-mode-indent-offset)
-           ((match "/" "jsx_self_closing_element") parent 0)
-           ((parent-is "jsx_self_closing_element") parent typescript-ts-mode-indent-offset)))
-     ;; FIXME(Theo): This no-node catch-all should be removed.  When is it needed?
-     (no-node parent-bol 0))))
-
-#+end_src
-
 ** markup+
 *** web-mode
 This mode supports multiple "languages" when there is no native mode for them.
@@ -1034,16 +937,6 @@ separate buffer."
 #+begin_src emacs-lisp
 (use-package elixir-mode
   :ensure t)
-#+end_src
-
-** COMMENT PlantUML
-#+begin_src emacs-lisp
-(use-package plantuml-mode
-  :ensure t
-  :custom
-  (plantuml-indent-level 4)
-  :hook
-  (plantuml-mode . (lambda () (indent-tabs-mode nil))))
 #+end_src
 
 ** mermaid
