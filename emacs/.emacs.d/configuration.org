@@ -1001,6 +1001,17 @@ There is also rustic available, but I want to use it when I feel like I need its
   :custom
   (sql-sqlite-options '("-header" "-box")))
 #+end_src
+* AI
+** gptel
+#+begin_src emacs-lisp
+(use-package gptel
+  :ensure t)
+#+end_src
+** agent-shell
+#+begin_src emacs-lisp
+(use-package agent-shell
+  :ensure t)
+#+end_src
 * Org-mode
 ** General config
 #+begin_src emacs-lisp
