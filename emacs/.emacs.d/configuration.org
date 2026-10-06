@@ -920,10 +920,6 @@ separate buffer."
 (use-package docker
   :ensure t
   :bind ("C-c d" . docker))
-
-(use-package docker-compose-mode
-  :mode ("docker-compose.yaml\\'")
-  :ensure t)
 #+end_src
 
 ** gleam
